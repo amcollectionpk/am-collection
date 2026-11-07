@@ -312,8 +312,8 @@ app.post('/api/delivery/quote', asyncH(async (req, res) => {
   const { items = [], province, city } = req.body;
   let subtotal = 0;
   for (const it of items) {
-    const { rows } = await pool.query('SELECT price,size_prices FROM products WHERE id=$1 AND is_active=true', [it.productId]);
-    if (rows[0]) { const spUnit = sizePriceFor(rows[0], it.size); subtotal += (spUnit != null ? spUnit : money(rows[0].price)) * Math.max(1, +it.quantity || 1); }
+    const { rows } = await pool.query('SELECT price,discount_price,size_prices FROM products WHERE id=$1 AND is_active=true', [it.productId]);
+    if (rows[0]) { const spUnit = sizePriceFor(rows[0], it.size); const unit = spUnit != null ? spUnit : money(rows[0].discount_price ?? rows[0].price); subtotal += unit * Math.max(1, +it.quantity || 1); }
   }
   const deliveryFee = calculateDelivery({ subtotal, province, city });
   res.json({ subtotal, deliveryFee, grandTotal: subtotal + deliveryFee, freeAbove: DELIVERY.freeAbove });
