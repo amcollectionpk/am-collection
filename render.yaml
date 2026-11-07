@@ -1,0 +1,89 @@
+# ============================================================================
+# AM Collection — Render Blueprint (FREE tier)
+# ----------------------------------------------------------------------------
+# Istemal: is poori am-collection folder ko ek Git repository (GitHub /
+# GitLab) mein rakhein, phir Render Dashboard -> New -> Blueprint ->
+# wo repository select karein. Render is file se khud bana dega:
+#   1) ek FREE PostgreSQL database (am-collection-db)
+#   2) ek FREE web service (am-collection) — Node.js server.js
+# DATABASE_URL database se khud linked ho jati hai; baaki secret values
+# (ADMIN_PASSWORD, JWT_SECRET khud generate hota hai, waghera) Blueprint
+# apply karte waqt Render poochta hai (sync: false wali).
+#
+# Build command `npm install && node scripts/init-db.js` hai: init-db
+# database/schema.sql + database/seed-watches.sql chala kar tables aur
+# 27 watches deploy ke saath hi daal deta hai (dono idempotent hain).
+# Free tier par pre-deploy command nahi milta, is liye ye build mein hai.
+#
+# FREE TIER KI LIMITS (Render ki asal sharait — README mein tafseel hai):
+#   * Free web service 15 minute khaali rehne par so jati hai; agli
+#     visit par ~1 minute mein jagti hai.
+#   * Free PostgreSQL sirf 30 DIN chalta hai — phir 14 din grace ke baad
+#     Render database + data DELETE kar deta hai. Asal sale se pehle
+#     database ko paid plan par upgrade karein ya data ka backup rakhein.
+# ============================================================================
+
+databases:
+  - name: am-collection-db
+    databaseName: am_collection
+    user: am_collection
+    plan: free
+    region: singapore
+
+services:
+  - type: web
+    name: am-collection
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install && node scripts/init-db.js
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      # Database link — value kabhi haath se na likhein, Render khud bharta hai
+      - key: DATABASE_URL
+        fromDatabase:
+          name: am-collection-db
+          property: connectionString
+      # Render Postgres par SSL lazmi hai
+      - key: PGSSL
+        value: "true"
+      - key: NODE_ENV
+        value: production
+      # Login tokens ka secret — Render khud random value bana dega
+      - key: JWT_SECRET
+        generateValue: true
+      # Admin dashboard login — password apply ke waqt Render poochega;
+      # yahan repository mein KABHI asal password na likhein
+      - key: ADMIN_USER
+        value: admin
+      - key: ADMIN_PASSWORD
+        sync: false
+      # Apna Render URL (misaal https://am-collection.onrender.com) ya
+      # custom domain — deploy ke baad Render Environment mein set karein
+      - key: CORS_ORIGINS
+        sync: false
+      # Store defaults (server.js yehi parhta hai)
+      - key: DELIVERY_BASE
+        value: "200"
+      - key: DELIVERY_FREE_ABOVE
+        value: "5000"
+      - key: STORE_CITY
+        value: Bahawalnagar
+      # Website par dikhne wala payment number (public number hai)
+      - key: STORE_PAYMENT_NUMBER
+        value: "03147656328"
+      # WhatsApp order notification (OPTIONAL) — Meta WhatsApp Cloud API
+      # ki values; khaali hon to notification off rehti hai, orders chalte
+      # rehte hain. Token secret hai — sirf Render Environment mein dein.
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: WHATSAPP_NOTIFY_TO
+        sync: false
+      - key: WHATSAPP_TEMPLATE_NAME
+        sync: false
+      - key: WHATSAPP_TEMPLATE_LANG
+        value: en

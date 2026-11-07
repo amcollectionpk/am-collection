@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard — AM Collection</title>
+<link rel="icon" type="image/svg+xml" href="/assets/logo.svg">
+<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/css/admin.css">
+</head>
+<body class="admin-body">
+<header class="admin-header no-print">
+  <a class="brand" href="/admin">
+    <img src="/assets/logo.svg" alt="AM Collection" class="brand-logo">
+    <span class="brand-name">AM <em>Collection</em> <small>Admin</small></span>
+  </a>
+  <div class="admin-header-actions">
+    <a href="/" target="_blank" rel="noopener">View Store ↗</a>
+    <button id="adminLogout" class="btn btn-ghost" hidden>Logout</button>
+  </div>
+</header>
+
+<section id="adminLogin" class="admin-login card">
+  <h1>Admin Login</h1>
+  <p class="muted">Ye login sirf owner / admin ke liye hai. Dashboard login ke baghair NAHI khulta aur koi dashboard data login se pehle load NAHI hota. Storefront (customer side) par admin ka koi link NAHI hai. Username aur password server ki <code>.env</code> file mein hain (<code>ADMIN_USER</code> / <code>ADMIN_PASSWORD</code>).</p>
+  <form id="adminLoginForm">
+    <label>Username *<input type="text" id="adminUsername" required autocomplete="username"></label>
+    <label>Password *<input type="password" id="adminPassword" required autocomplete="current-password"></label>
+    <p class="form-error" id="adminLoginError"></p>
+    <button class="btn btn-primary btn-block" type="submit">Login to Dashboard</button>
+  </form>
+</section>
+
+<div id="adminShell" class="admin-shell" hidden>
+  <aside class="admin-side no-print">
+    <a href="#overview" data-admin-nav="overview">Overview</a>
+    <a href="#products" data-admin-nav="products">Products</a>
+    <a href="#inventory" data-admin-nav="inventory">Inventory</a>
+    <a href="#orders" data-admin-nav="orders">Orders</a>
+    <a href="#complaints" data-admin-nav="complaints">Complaints</a>
+    <a href="#customers" data-admin-nav="customers">Customers</a>
+    <a href="#payments" data-admin-nav="payments">Payments</a>
+    <a href="#reviews" data-admin-nav="reviews">Reviews</a>
+    <a href="#marketing" data-admin-nav="marketing">Marketing</a>
+    <a href="#reports" data-admin-nav="reports">Reports</a>
+    <a href="#settings" data-admin-nav="settings">Settings</a>
+  </aside>
+  <main id="adminApp" class="admin-main"></main>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="/js/api.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
