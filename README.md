@@ -13,16 +13,16 @@ Package mein kya hai:
 | Design (CSS) | `public/css/styles.css`, `public/css/admin.css` |
 | Logo | `public/assets/logo.svg` (approved logo ki SVG recreation) + `public/assets/logo.png` (final logo file) |
 | Backend (Node.js + Express) | `server.js` — secure order creation, server-side delivery calculation, optional WhatsApp order notification |
-| Database (PostgreSQL) | `database/schema.sql` — server.js ki queries se **matched** schema (integer IDs, `products.stock_qty`, `orders.order_status`/`payment_status`), 16 tables | + `database/seed-watches.sql` — 27 watches ka catalog seed (schema ke baad chalain) |
+| Database (PostgreSQL) | `database/schema.sql` — server.js ki queries se **matched** schema (integer IDs, `products.stock_qty`, `orders.order_status`/`payment_status`), 16 tables | + `database/seed-watches.sql` — 79 watches ka catalog seed (schema ke baad chalain) |
 | Render deploy (FREE) | `render.yaml` — Render Blueprint: free web service + free PostgreSQL, database khud link ho jati hai |
 | Database init script | `scripts/init-db.js` — schema + seed ek command se (`npm run db:init`); Render build mein khud chalta hai |
 | Settings ki misaal | `.env.example` |
 
-**Catalog: 27 watches (owner ki asal photos + prices).** Storefront in
+**Catalog: 79 watches (owner ki asal photos + prices).** Storefront in
 watches ko built-in catalog (`public/js/catalog.js`, photos
-`public/assets/watches/`) se foran dikhata hai — Men's Watches (4),
-Luxury Watches (15), Sports Watches (8). Live server checkout ke liye yehi
-27 products database mein daalne ke liye Step 2 ke baad
+`public/assets/watches/`) se foran dikhata hai — Men's Watches (27),
+Women's Watches (25), Smartwatches (27). Live server checkout ke liye yehi
+79 products database mein daalne ke liye Step 2 ke baad
 `database/seed-watches.sql` chalain (schema.sql ke baad, idempotent hai).
 Admin dashboard se mazeed products bhi add ho sakte hain.
 
@@ -82,10 +82,10 @@ registrar par paid hoti hai).
    badal sakte hain).
 4. **Deploy ka intezar karein** — pehli build mein `npm install` ke
    saath `node scripts/init-db.js` bhi chalta hai, jo database mein
-   **tables + 27 watches khud daal deta hai**. Build log mein
-   `[init-db] done — products: 27, categories: 3` nazar ana chahiye.
+   **tables + 79 watches khud daal deta hai**. Build log mein
+   `[init-db] done — products: 79, categories: 3` nazar ana chahiye.
    Phir service **Live** ho jayegi aur Render website ka URL dega.
-5. **Test karein** — URL khol kar: store par 27 watches nazar ayen →
+5. **Test karein** — URL khol kar: store par 79 watches nazar ayen →
    ek test COD order karein → website ke **Login screen** par admin
    username/password (jo Step 3 mein rakha tha) dalne se **Admin
    Dashboard** khule aur order wahan maujood ho → order ko Confirm →
@@ -190,7 +190,7 @@ Hosting / cloud par ek khaali PostgreSQL database banayein, phir schema run kare
 psql "AAPKI_DATABASE_URL" -f database/schema.sql
 ```
 
-Phir watch catalog (27 products, photos `public/assets/watches/` se serve
+Phir watch catalog (79 products, photos `public/assets/watches/` se serve
 hoti hain) database mein daalne ke liye:
 
 ```bash
@@ -202,8 +202,8 @@ Is se saari tables (16) ban jayengi — schema `server.js` ki queries se
 mein, orders par `order_status` / `payment_status` columns, aur payment
 methods `COD` / `JAZZCASH` / `EASYPAISA` / `NAYAPAY` TEXT values mein.
 `schema.sql` sirf structure + chhota sa base seed (store settings) deta
-hai — **categories aur 27 products `seed-watches.sql` se ate hain**
-(Men's Watches 4, Luxury Watches 15, Sports Watches 8; har product ki
+hai — **categories aur 79 products `seed-watches.sql` se ate hain**
+(Men's Watches 27, Women's Watches 25, Smartwatches 27; har product ki
 photo `products.image_url` mein aur stock 20). Ek hi command ka
 shortcut bhi hai: `npm run db:init` (yehi script Render ki build mein
 khud chalti hai). Dono SQL files idempotent hain.
@@ -546,5 +546,5 @@ form ke Image URL ko save karna, optional WhatsApp order notification
 bugs ka fix jo kisi bhi schema par deploy tor dete thay — category
 filter mein slug par integer-cast error (shop ki category pages 500
 deti theen) aur Track Order ki history query mein ambiguous
-`created_at`. Storefront ka design, 27 watches, prices, payment
+`created_at`. Storefront ka design, 79 watches, prices, payment
 methods aur admin login ka tareeqa bilkul pehle jaisa hai.

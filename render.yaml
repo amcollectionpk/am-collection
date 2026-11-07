@@ -12,7 +12,7 @@
 #
 # Build command `npm install && node scripts/init-db.js` hai: init-db
 # database/schema.sql + database/seed-watches.sql chala kar tables aur
-# 27 watches deploy ke saath hi daal deta hai (dono idempotent hain).
+# 79 watches deploy ke saath hi daal deta hai (dono idempotent hain).
 # Free tier par pre-deploy command nahi milta, is liye ye build mein hai.
 #
 # FREE TIER KI LIMITS (Render ki asal sharait — README mein tafseel hai):

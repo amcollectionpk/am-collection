@@ -10,7 +10,7 @@
  * Deps: express pg bcryptjs jsonwebtoken helmet cors express-rate-limit dotenv
  * DB:   PostgreSQL — database/schema.sql (server.js ki queries se matched:
  *       integer IDs, products.stock_qty, orders.order_status/payment_status)
- *       + database/seed-watches.sql (27 watches). Render par dono files
+ *       + database/seed-watches.sql (79 watches). Render par dono files
  *       scripts/init-db.js se build ke waqt khud chal jati hain.
  * Render: PORT hosting deti hai (process.env.PORT) — neeche wahi bind hota
  *       hai; database SSL ke liye PGSSL=true rakhein (Render Postgres par
@@ -217,8 +217,8 @@ app.get('/api/products', asyncH(async (req, res) => {
   if (category) { args.push(category); where.push(/^\d+$/.test(String(category)) ? `(c.slug=$${args.length} OR p.category_id=$${args.length}::int)` : `c.slug=$${args.length}`); }
   if (search) { args.push(`%${search}%`); where.push(`(p.name ILIKE $${args.length} OR p.sku ILIKE $${args.length})`); }
   const order = { newest: 'p.created_at DESC', price_asc: 'p.price ASC', price_desc: 'p.price DESC', popular: 'p.created_at DESC' }[sort] || 'p.created_at DESC';
-  const off = (Math.max(1, +page) - 1) * Math.min(60, +limit);
-  args.push(Math.min(60, +limit), off);
+  const off = (Math.max(1, +page) - 1) * Math.min(100, +limit);
+  args.push(Math.min(100, +limit), off);
   const { rows } = await pool.query(`SELECT p.*, c.name AS category_name, c.slug AS category_slug FROM products p LEFT JOIN categories c ON c.id=p.category_id WHERE ${where.join(' AND ')} ORDER BY ${order} LIMIT $${args.length - 1} OFFSET $${args.length}`, args);
   res.json({ products: rows, page: +page });
 }));

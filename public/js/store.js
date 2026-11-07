@@ -4,7 +4,7 @@
    Policies, FAQs, Contact, Complaint, Payment Methods).
    Data: live backend API (server.js) is used first when the deployed database
    has products; otherwise the built-in watch catalog (js/catalog.js — the
-   owner's 27 watches with photos + prices) drives the shop. Cart / wishlist
+   owner's 79 watches with photos + prices) drives the shop. Cart / wishlist
    live in localStorage; orders are always verified server-side. */
 (function () {
   'use strict';
@@ -77,7 +77,7 @@
   var apiMode = null; // null=unknown, true=live DB products, false=built-in catalog
   function detectMode() {
     if (apiMode !== null) return Promise.resolve(apiMode);
-    return api.get('/api/products?limit=60').then(function (d) {
+    return api.get('/api/products?limit=100').then(function (d) {
       apiMode = !!(d.products && d.products.length);
       return apiMode;
     }).catch(function () { apiMode = false; return false; });
@@ -86,8 +86,8 @@
     var list = CATALOG.products.slice();
     if (opts.category) list = list.filter(function (p) { return p.category_slug === opts.category; });
     if (opts.search) { var s = opts.search.toLowerCase(); list = list.filter(function (p) { return p.name.toLowerCase().indexOf(s) >= 0 || p.category_name.toLowerCase().indexOf(s) >= 0; }); }
-    if (opts.sort === 'price_asc') list.sort(function (a, b) { return a.price - b.price; });
-    if (opts.sort === 'price_desc') list.sort(function (a, b) { return b.price - a.price; });
+    if (opts.sort === 'price_asc') list.sort(function (a, b) { return (a.discount_price != null ? a.discount_price : a.price) - (b.discount_price != null ? b.discount_price : b.price); });
+    if (opts.sort === 'price_desc') list.sort(function (a, b) { return (b.discount_price != null ? b.discount_price : b.price) - (a.discount_price != null ? a.discount_price : a.price); });
     if (opts.sort === 'popular') list.sort(function (a, b) { return (b.is_featured - a.is_featured) || (a.n - b.n); });
     return list;
   }
@@ -95,7 +95,7 @@
     opts = opts || {};
     return detectMode().then(function (live) {
       if (!live) return localFilter(opts).map(normProduct);
-      var qs = '?limit=60' + (opts.category ? '&category=' + encodeURIComponent(opts.category) : '') +
+      var qs = '?limit=100' + (opts.category ? '&category=' + encodeURIComponent(opts.category) : '') +
         (opts.search ? '&search=' + encodeURIComponent(opts.search) : '') + (opts.sort ? '&sort=' + encodeURIComponent(opts.sort) : '');
       return api.get('/api/products' + qs).then(function (d) { return (d.products || []).map(normProduct); })
         .catch(function () { return localFilter(opts).map(normProduct); });
@@ -193,8 +193,11 @@
     app.innerHTML = '<p class="muted">Loading…</p>';
     Promise.all([loadCategories(), loadProducts({ sort: 'popular' })]).then(function (r) {
       var cats = r[0], all = r[1];
-      var best = all.filter(function (p) { return p.is_featured; });
-      if (best.length < 4) best = all.slice(0, 8);
+      var byNum = function (a, b) { return (parseInt(((a.image_url || '').match(/watch-(\d+)\.jpg/) || [])[1] || '0', 10)) - (parseInt(((b.image_url || '').match(/watch-(\d+)\.jpg/) || [])[1] || '0', 10)); };
+      var best = all.slice().sort(function (a, b) { return (b.price - a.price) || byNum(a, b); }).slice(0, 8);
+      var flow = all.filter(function (p) { return p.category_slug === 'mens-watches'; }).sort(byNum)
+        .concat(all.filter(function (p) { return p.category_slug === 'smartwatches'; }).sort(byNum))
+        .concat(all.filter(function (p) { return p.category_slug === 'womens-watches'; }).sort(byNum));
       var heroImg = (all.filter(function (p) { return p.slug === 'jacob-and-co-the-godfather'; })[0] || all[0] || {}).image_url || '/assets/watches/watch-27.jpg';
       app.innerHTML =
         '<section class="hero"><div>' +
@@ -214,10 +217,9 @@
           var count = all.filter(function (p) { return p.category_slug === c.slug; }).length;
           return '<a class="tile" href="#/shop?category=' + encodeURIComponent(c.slug) + '"><img src="' + esc(c.image_url || c.image || '/assets/watches/watch-01.jpg') + '" alt="' + esc(c.name) + '"><small>' + (count ? count + ' watches' : 'Watches') + '</small><span>' + esc(c.name) + '</span></a>';
         }).join('') + '</div>' +
-        '<h2 class="section-title">Best Selling <a href="#/shop">Shop All →</a></h2>' + gridHtml(best.slice(0, 8)) +
+        '<h2 class="section-title">Best Selling</h2>' + gridHtml(best) +
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
-        '<h2 class="section-title">All Watches</h2>' + gridHtml(all.slice(0, 12)) +
-        (all.length > 12 ? '<p style="text-align:center;margin-top:16px"><a class="btn" href="#/shop">View All ' + all.length + ' Watches</a></p>' : '');
+        gridHtml(flow);
       bindCardButtons(app);
       window.scrollTo(0, 0);
     });

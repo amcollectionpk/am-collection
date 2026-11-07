@@ -12,7 +12,7 @@
 --     CANCELLED, RETURNED / PENDING, COD_PENDING, PAID, FAILED ...
 --   * Payment methods TEXT hain: COD, JAZZCASH, EASYPAISA, NAYAPAY.
 -- Run:  psql "$DATABASE_URL" -f database/schema.sql
--- Phir: psql "$DATABASE_URL" -f database/seed-watches.sql  (27 watches)
+-- Phir: psql "$DATABASE_URL" -f database/seed-watches.sql  (79 watches)
 -- Dono files idempotent hain — dobara chalane se nuqsan nahi hota.
 -- Requires: PostgreSQL 13+
 -- ============================================================================
