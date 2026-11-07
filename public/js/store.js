@@ -41,7 +41,7 @@
     { q: 'How can I pay?', a: 'You can pay Cash on Delivery when your parcel arrives, or pay through JazzCash, Easypaisa or NayaPay on the number 03147656328. Prepaid payments are marked paid only after verified confirmation from the payment provider.' },
     { q: 'How do I track my order?', a: 'Open the Track Order page and enter your order number and the mobile number used at checkout. You will see the current status — Pending Confirmation, Confirmed, Processing, Shipped or Delivered.' },
     { q: 'Can I return or exchange an item?', a: 'Yes — damaged, defective or wrong items can be returned or exchanged within 7 days of delivery. See the Return & Refund Policy page for full details and contact us on WhatsApp for help.' },
-    { q: 'Do I need an account to order?', a: 'No. You can order as a guest with just your name, mobile number and address. Creating an account lets you save your details and see your order history in My Account.' }
+    { q: 'Do I need an account to order?', a: 'No. You can order as a guest with just your name, mobile number and address, and track your order any time from the Track Order page with your order number and mobile number.' }
   ];
 
   /* ---------- local state ---------- */
@@ -189,6 +189,60 @@
   }
 
   /* ---------- HOME ---------- */
+  /* ---------- HERO SLIDER (Home): 5 slides, auto-play 6s, arrows + dots + swipe ---------- */
+  var heroTimer = null;
+  function heroSlides(all) {
+    function bySlug(slug) { var f = all.filter(function (p) { return p.slug === slug; }); return f[0] || null; }
+    var defs = [
+      { slug: 'jacob-and-co-the-godfather', kick: 'LUXURY COLLECTION', title: 'Timeless Luxury,<br><em>On Your Wrist</em>', text: 'Premium Quality, Best Prices — Cash on Delivery across Pakistan', cta: 'Shop Now', href: '#/product/jacob-and-co-the-godfather', img: '/assets/watches/watch-27.jpg', alt: 'Jacob & Co The Godfather luxury watch' },
+      { slug: 'rolex-datejust-blue-dial-silver', kick: "MEN'S WATCHES", title: 'Classic Style,<br><em>For Every Day</em>', text: "Elegant men's watches — Cash on Delivery across Pakistan", cta: 'Shop Now', href: '#/product/rolex-datejust-blue-dial-silver', img: '/assets/watches/watch-01.jpg', alt: 'Rolex Datejust Blue Dial — Silver' },
+      { slug: 'michael-kors-rose-gold-pink-dial', kick: "WOMEN'S WATCHES", title: 'Elegance That<br><em>Shines Bright</em>', text: "Beautiful women's watches — Cash on Delivery across Pakistan", cta: 'Shop Now', href: '#/product/michael-kors-rose-gold-pink-dial', img: '/assets/watches/watch-28.jpg', alt: 'Michael Kors Rose Gold — Pink Dial' },
+      { slug: 'apple-watch-ultra-titanium-metal-strap', kick: 'SMARTWATCHES', title: 'Smart Tech,<br><em>Bold Design</em>', text: 'Latest smartwatches — Cash on Delivery across Pakistan', cta: 'Shop Now', href: '#/product/apple-watch-ultra-titanium-metal-strap', img: '/assets/watches/watch-58.jpg', alt: 'Apple Watch Ultra Titanium — Metal Strap' },
+      { slug: null, kick: 'SPECIAL OFFERS', title: 'Up to 35% Off<br><em>Luxury Watches</em>', text: 'Discounts on all 79 watches — Cash on Delivery across Pakistan', cta: 'See Offers', href: '#/offers', img: '/assets/watches/watch-53.jpg', alt: 'Special offers on luxury watches', priceText: 'Watches from Rs. 1,950' }
+    ];
+    return defs.map(function (d) {
+      var p = d.slug ? bySlug(d.slug) : null;
+      var priceHtml = '';
+      if (p) priceHtml = rs(p.price) + (p.wasPrice ? ' <s>' + rs(p.wasPrice) + '</s>' : '');
+      else if (d.priceText) priceHtml = esc(d.priceText);
+      return { kick: d.kick, title: d.title, text: d.text, cta: d.cta, href: d.href, img: (p && p.image_url) || d.img, alt: (p && p.name) || d.alt, priceHtml: priceHtml };
+    });
+  }
+  function initHeroSlider() {
+    var box = document.getElementById('heroSlider');
+    if (!box) return;
+    if (heroTimer) { clearInterval(heroTimer); heroTimer = null; }
+    var track = document.getElementById('heroSlides');
+    var dots = Array.prototype.slice.call(document.querySelectorAll('#heroDots button'));
+    var total = dots.length, idx = 0;
+    function show(i) {
+      idx = (i + total) % total;
+      track.style.transform = 'translateX(-' + (idx * 100) + '%)';
+      dots.forEach(function (d, j) { d.classList.toggle('active', j === idx); });
+    }
+    function restart() {
+      if (heroTimer) clearInterval(heroTimer);
+      heroTimer = setInterval(function () {
+        if (!document.getElementById('heroSlider')) { clearInterval(heroTimer); heroTimer = null; return; }
+        show(idx + 1);
+      }, 6000);
+    }
+    document.getElementById('heroPrev').addEventListener('click', function () { show(idx - 1); restart(); });
+    document.getElementById('heroNext').addEventListener('click', function () { show(idx + 1); restart(); });
+    dots.forEach(function (d, j) { d.addEventListener('click', function () { show(j); restart(); }); });
+    box.addEventListener('mouseenter', function () { if (heroTimer) { clearInterval(heroTimer); heroTimer = null; } });
+    box.addEventListener('mouseleave', restart);
+    var startX = null;
+    box.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; if (heroTimer) { clearInterval(heroTimer); heroTimer = null; } }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (startX === null) return;
+      var dx = e.changedTouches[0].clientX - startX; startX = null;
+      if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+      restart();
+    }, { passive: true });
+    restart();
+  }
+
   function viewHome() {
     app.innerHTML = '<p class="muted">Loading…</p>';
     Promise.all([loadCategories(), loadProducts({ sort: 'popular' })]).then(function (r) {
@@ -198,14 +252,24 @@
       var flow = all.filter(function (p) { return p.category_slug === 'mens-watches'; }).sort(byNum)
         .concat(all.filter(function (p) { return p.category_slug === 'smartwatches'; }).sort(byNum))
         .concat(all.filter(function (p) { return p.category_slug === 'womens-watches'; }).sort(byNum));
-      var heroImg = (all.filter(function (p) { return p.slug === 'jacob-and-co-the-godfather'; })[0] || all[0] || {}).image_url || '/assets/watches/watch-27.jpg';
+      var slides = heroSlides(all);
       app.innerHTML =
-        '<section class="hero"><div>' +
-          '<span class="kick">AM COLLECTION — LUXURY WATCHES</span>' +
-          '<h1>Timeless Luxury,<br><em>On Your Wrist</em></h1>' +
-          '<p>Premium Quality, Best Prices — Cash on Delivery across Pakistan</p>' +
-          '<div class="hero-cta"><a class="btn btn-primary" href="#/shop">Shop Now</a><a class="btn" href="#/offers">Special Offers</a></div>' +
-        '</div><img src="' + esc(heroImg) + '" alt="Luxury watch at AM Collection"></section>' +
+        '<section class="hero-slider" id="heroSlider" aria-label="Featured watches">' +
+          '<div class="hero-slides" id="heroSlides">' + slides.map(function (s, i) {
+            return '<div class="hero-slide"><section class="hero"><div>' +
+              '<span class="kick">' + esc(s.kick) + '</span>' +
+              '<h1>' + s.title + '</h1>' +
+              '<p>' + esc(s.text) + '</p>' +
+              (s.priceHtml ? '<p class="hero-price">' + s.priceHtml + '</p>' : '') +
+              '<div class="hero-cta"><a class="btn btn-primary" href="' + esc(s.href) + '">' + esc(s.cta) + '</a></div>' +
+            '</div><img src="' + esc(s.img) + '" alt="' + esc(s.alt) + '"></section></div>';
+          }).join('') + '</div>' +
+          '<button class="hero-arrow prev" id="heroPrev" type="button" aria-label="Previous slide">\u2039</button>' +
+          '<button class="hero-arrow next" id="heroNext" type="button" aria-label="Next slide">\u203a</button>' +
+          '<div class="hero-dots" id="heroDots">' + slides.map(function (s, i) {
+            return '<button type="button" data-dot="' + i + '" aria-label="Go to slide ' + (i + 1) + '"' + (i === 0 ? ' class="active"' : '') + '></button>';
+          }).join('') + '</div>' +
+        '</section>' +
         '<div class="trust-row">' +
           '<div class="trust-box"><b>Cash on Delivery</b><span class="muted small">Pay at your doorstep</span></div>' +
           '<div class="trust-box"><b>Delivery Rs. 200</b><span class="muted small">FREE on orders Rs. 5,000+</span></div>' +
@@ -221,6 +285,7 @@
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
         gridHtml(flow);
       bindCardButtons(app);
+      initHeroSlider();
       window.scrollTo(0, 0);
     });
   }
@@ -484,46 +549,27 @@
       window.scrollTo(0, 0); return;
     }
     app.innerHTML = '<h1 class="section-title">My Account</h1><div class="card" style="max-width:480px;margin:0 auto">' +
-      '<div style="display:flex;gap:8px;margin-bottom:14px"><button class="btn btn-primary btn-sm" id="tabLogin">Login</button><button class="btn btn-sm" id="tabReg">Create Account</button></div>' +
-      '<form id="authForm"><div id="regFields" hidden><label>Full Name *<input id="authName"></label><label>Phone (optional)<input id="authPhone" inputmode="tel"></label></div>' +
-      '<label>Email *<input id="authEmail" type="email" required autocomplete="email"></label>' +
+      '<form id="authForm">' +
+      '<label>Email or Username *<input id="authEmail" type="text" required autocomplete="username"></label>' +
       '<label>Password *<input id="authPass" type="password" required autocomplete="current-password"></label>' +
       '<p class="form-error" id="authErr"></p><button class="btn btn-primary btn-block" id="authBtn" type="submit">Login</button></form>' +
-      '<p class="muted small">Store owner? Login with the admin username and password from the server .env file — the Admin Dashboard opens automatically.</p>' +
+      '<p class="muted small">Store owner? Login with the admin username and password — the Admin Dashboard opens automatically.</p>' +
       '<p class="muted small">No account needed to order — you can always check out as a guest.</p></div>';
-    var mode = 'login';
-    function setMode(m) {
-      mode = m;
-      document.getElementById('regFields').hidden = m === 'login';
-      document.getElementById('authBtn').textContent = m === 'login' ? 'Login' : 'Create Account';
-      document.getElementById('tabLogin').classList.toggle('btn-primary', m === 'login');
-      document.getElementById('tabReg').classList.toggle('btn-primary', m !== 'login');
-    }
-    document.getElementById('tabLogin').addEventListener('click', function () { setMode('login'); });
-    document.getElementById('tabReg').addEventListener('click', function () { setMode('register'); });
     document.getElementById('authForm').addEventListener('submit', function (e) {
       e.preventDefault();
       var email = document.getElementById('authEmail').value.trim(), pass = document.getElementById('authPass').value;
       var errEl = document.getElementById('authErr');
-      if (mode === 'register') {
-        api.post('/api/auth/register', { fullName: document.getElementById('authName').value.trim(), email: email, phone: document.getElementById('authPhone').value.trim() || undefined, password: pass }).then(function (d) {
-          if (d.token) AMC.setToken(d.token);
-          session = { name: (d.user && (d.user.full_name || d.user.name)) || document.getElementById('authName').value.trim(), email: email };
-          saveSession(); AMC.toast('Account created — welcome!'); viewAccount();
-        }).catch(function (err) { errEl.textContent = (err.details || [err.message]).join(' '); });
-      } else {
-        // Pehle customer login; fail ho to admin login try (owner ke liye).
-        api.post('/api/auth/login', { email: email, password: pass }).then(function (d) {
-          if (d.token) AMC.setToken(d.token);
-          session = { name: (d.user && (d.user.full_name || d.user.name)) || email, email: (d.user && d.user.email) || email };
-          saveSession(); AMC.toast('Welcome back!'); viewAccount();
-        }).catch(function () {
-          api.post('/api/admin/login', { username: email, password: pass }).then(function (d) {
-            if (d.token) AMC.setAdminToken(d.token);
-            AMC.toast('Admin login successful'); viewAccount();
-          }).catch(function (err2) { errEl.textContent = err2.message || 'Login failed — check email and password.'; });
-        });
-      }
+      // Pehle customer login; fail ho to admin login try (owner ke liye).
+      api.post('/api/auth/login', { email: email, password: pass }).then(function (d) {
+        if (d.token) AMC.setToken(d.token);
+        session = { name: (d.user && (d.user.full_name || d.user.name)) || email, email: (d.user && d.user.email) || email };
+        saveSession(); AMC.toast('Welcome back!'); viewAccount();
+      }).catch(function () {
+        api.post('/api/admin/login', { username: email, password: pass }).then(function (d) {
+          if (d.token) AMC.setAdminToken(d.token);
+          AMC.toast('Admin login successful'); viewAccount();
+        }).catch(function (err2) { errEl.textContent = err2.message || 'Login failed — check email/username and password.'; });
+      });
     });
     window.scrollTo(0, 0);
   }
