@@ -189,7 +189,7 @@
   }
 
   /* ---------- HOME ---------- */
-  /* ---------- HERO SLIDER (Home): 5 slides, auto-play 6s, arrows + dots + swipe ---------- */
+  /* ---------- HERO SLIDER (Home): 5 slides, auto-play 2s, arrows + dots + swipe ---------- */
   var heroTimer = null;
   function heroSlides(all) {
     function bySlug(slug) { var f = all.filter(function (p) { return p.slug === slug; }); return f[0] || null; }
@@ -225,7 +225,7 @@
       heroTimer = setInterval(function () {
         if (!document.getElementById('heroSlider')) { clearInterval(heroTimer); heroTimer = null; return; }
         show(idx + 1);
-      }, 6000);
+      }, 2000);
     }
     document.getElementById('heroPrev').addEventListener('click', function () { show(idx - 1); restart(); });
     document.getElementById('heroNext').addEventListener('click', function () { show(idx + 1); restart(); });
