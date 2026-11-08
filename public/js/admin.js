@@ -60,6 +60,10 @@
       document.getElementById('ovStats').innerHTML = '<div class="stat-grid">' +
         '<div class="stat"><div class="stat-num">' + (d.today ? d.today.orders : 0) + '</div><div class="stat-label">Orders Today</div></div>' +
         '<div class="stat"><div class="stat-num">' + rs(d.today ? d.today.revenue : 0) + '</div><div class="stat-label">Sales Today</div></div>' +
+        '<div class="stat"><div class="stat-num">' + (d.week ? d.week.orders : 0) + '</div><div class="stat-label">Orders This Week</div></div>' +
+        '<div class="stat"><div class="stat-num">' + rs(d.week ? d.week.revenue : 0) + '</div><div class="stat-label">Sales This Week</div></div>' +
+        '<div class="stat"><div class="stat-num">' + (d.month ? d.month.orders : 0) + '</div><div class="stat-label">Orders This Month</div></div>' +
+        '<div class="stat"><div class="stat-num">' + rs(d.month ? d.month.revenue : 0) + '</div><div class="stat-label">Sales This Month</div></div>' +
         '<div class="stat"><div class="stat-num">' + (d.pendingConfirmation || 0) + '</div><div class="stat-label">Pending Confirmation</div></div>' +
         '<div class="stat"><div class="stat-num">' + (d.lowStock || []).length + '</div><div class="stat-label">Low-Stock Items</div></div></div>';
       document.getElementById('ovRecent').innerHTML = (d.recentOrders || []).length ? ordersTable(d.recentOrders) : '<div class="empty">Abhi koi order nahi.</div>';
