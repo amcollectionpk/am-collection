@@ -614,13 +614,15 @@ app.patch('/api/admin/orders/:orderNumber/payment', requireAuth, requireAdmin, a
   res.json({ ok: true, ...rows[0] });
 }));
 app.get('/api/admin/dashboard', requireAuth, requireAdmin, asyncH(async (req, res) => {
-  const [sales, pending, lowStock, recent] = await Promise.all([
+  const [sales, weekSales, monthSales, pending, lowStock, recent] = await Promise.all([
     pool.query("SELECT COUNT(*)::int AS orders, COALESCE(SUM(grand_total),0)::int AS revenue FROM orders WHERE order_status<>'CANCELLED' AND created_at>=date_trunc('day',now())"),
+    pool.query("SELECT COUNT(*)::int AS orders, COALESCE(SUM(grand_total),0)::int AS revenue FROM orders WHERE order_status<>'CANCELLED' AND created_at>=date_trunc('day',now()) - interval '6 days'"),
+    pool.query("SELECT COUNT(*)::int AS orders, COALESCE(SUM(grand_total),0)::int AS revenue FROM orders WHERE order_status<>'CANCELLED' AND created_at>=date_trunc('month',now())"),
     pool.query("SELECT COUNT(*)::int AS n FROM orders WHERE order_status='PENDING_CONFIRMATION'"),
     pool.query('SELECT id,name,sku,stock_qty FROM products WHERE stock_qty<=5 AND is_active=true ORDER BY stock_qty LIMIT 10'),
     pool.query('SELECT order_number,customer_name,grand_total,order_status,created_at FROM orders ORDER BY created_at DESC LIMIT 10'),
   ]);
-  res.json({ today: sales.rows[0], pendingConfirmation: pending.rows[0].n, lowStock: lowStock.rows, recentOrders: recent.rows });
+  res.json({ today: sales.rows[0], week: weekSales.rows[0], month: monthSales.rows[0], pendingConfirmation: pending.rows[0].n, lowStock: lowStock.rows, recentOrders: recent.rows });
 }));
 // ---------- Admin: About page picture set / change / remove (sirf admin token) ----------
 // Upload: raw image body (Content-Type image/jpeg|png|webp|gif, max 5MB).
