@@ -392,7 +392,8 @@
     'men-color-block-fleece-hoodie-olive': ['/assets/hoodies/hoodie-size-chart.jpg'],
     'rolex-datejust': ['/assets/watches/rolex-datejust-gold.jpg', '/assets/watches/rolex-datejust-blue.jpg', '/assets/watches/rolex-datejust-black-2.jpg', '/assets/watches/rolex-datejust-maroon.jpg', '/assets/watches/rolex-datejust-green.jpg'],
     'diamond-stone-mens-luxury-fashion-watch': ['/assets/watches/diamond-stone-green-2.jpg', '/assets/watches/diamond-stone-green-3.jpg'],
-    'black-skeleton-chronograph-watch-for-men': ['/assets/watches/black-skeleton-2.jpg', '/assets/watches/black-skeleton-3.jpg', '/assets/watches/black-skeleton-4.jpg', '/assets/watches/black-skeleton-5.jpg']
+    'black-skeleton-chronograph-watch-for-men': ['/assets/watches/black-skeleton-2.jpg', '/assets/watches/black-skeleton-3.jpg', '/assets/watches/black-skeleton-4.jpg', '/assets/watches/black-skeleton-5.jpg'],
+    'diamond-stone-mens-luxury-fashion-watch-black': ['/assets/watches/diamond-stone-black-2.jpg', '/assets/watches/diamond-stone-black-3.jpg', '/assets/watches/diamond-stone-black-4.jpg', '/assets/watches/diamond-stone-black-5.jpg', '/assets/watches/diamond-stone-black-6.jpg', '/assets/watches/diamond-stone-black-7.jpg', '/assets/watches/diamond-stone-black-8.jpg', '/assets/watches/diamond-stone-black-9.jpg']
   };
 
   function viewProduct(slug) {
