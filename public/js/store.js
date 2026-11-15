@@ -165,6 +165,7 @@
         var buy = btn.hasAttribute('data-buy');
         loadProduct(slug).then(function (d) {
           if (!d) { AMC.toast('Product not available'); return; }
+          if (/hoodie/i.test(d.product.slug)) { location.hash = '#/product/' + encodeURIComponent(d.product.slug); AMC.toast('Please select a size first'); return; }
           addToCart(d.product, 1);
           AMC.toast('Added to cart — ' + d.product.name);
           if (buy) location.hash = '#/cart';
@@ -515,7 +516,7 @@
     app.innerHTML = '<h1 class="section-title">My Cart</h1><div class="card">' +
       cart.map(function (c, i) {
         return '<div class="cart-row">' + (c.image ? '<img src="' + esc(c.image) + '" alt="">' : '<span>⌚</span>') +
-          '<div><a href="#/product/' + encodeURIComponent(c.slug) + '"><b>' + esc(c.name) + '</b></a>' + (c.size ? '<br><span class="muted small">Size: ' + esc(c.size) + '</span>' : '') + '<br><span class="muted small">' + rs(c.price) + ' each</span>' +
+          '<div><a href="#/product/' + encodeURIComponent(c.slug) + '"><b>' + esc(c.name) + '</b></a>' + (c.size ? '<br><span class="muted small">Size: ' + esc(c.size) + '</span>' : (/hoodie/i.test(c.slug) ? '<br><span class="muted small">Size — select one *</span><div class="size-btns" data-cart-size="' + i + '">' + ['M', 'L', 'XL', 'XXL'].map(function (s) { return '<button type="button" data-size="' + s + '">' + s + '</button>'; }).join('') + '</div>' : '')) + '<br><span class="muted small">' + rs(c.price) + ' each</span>' +
           '<div class="qty-ctrl" style="margin-top:6px"><button data-dec="' + i + '">−</button><input value="' + c.qty + '" readonly><button data-inc="' + i + '">+</button></div></div>' +
           '<div style="text-align:right"><b>' + rs(c.price * c.qty) + '</b><br><button class="btn btn-sm btn-ghost" data-del="' + i + '">Remove</button></div></div>';
       }).join('') + summaryHtml(sub, del) +
@@ -524,6 +525,7 @@
     app.querySelectorAll('[data-inc]').forEach(function (b) { b.addEventListener('click', function () { var c = cart[Number(b.getAttribute('data-inc'))]; c.qty = Math.min(c.stock || 20, c.qty + 1); saveCart(); viewCart(); }); });
     app.querySelectorAll('[data-dec]').forEach(function (b) { b.addEventListener('click', function () { var c = cart[Number(b.getAttribute('data-dec'))]; c.qty = Math.max(1, c.qty - 1); saveCart(); viewCart(); }); });
     app.querySelectorAll('[data-del]').forEach(function (b) { b.addEventListener('click', function () { cart.splice(Number(b.getAttribute('data-del')), 1); saveCart(); viewCart(); }); });
+    app.querySelectorAll('[data-cart-size] button').forEach(function (b) { b.addEventListener('click', function () { var wrap = b.closest('[data-cart-size]'); var idx = Number(wrap.getAttribute('data-cart-size')); cart[idx].size = b.getAttribute('data-size'); saveCart(); viewCart(); }); });
     window.scrollTo(0, 0);
   }
 
@@ -571,6 +573,8 @@
     quote();
     document.getElementById('coForm').addEventListener('submit', function (e) {
       e.preventDefault();
+      var missingSize = cart.some(function (c) { return /hoodie/i.test(c.slug) && !c.size; });
+      if (missingSize) { AMC.toast('Please select a size for the hoodie in your cart first'); location.hash = '#/cart'; return; }
       var pay = (app.querySelector('input[name="pay"]:checked') || {}).value || 'COD';
       var body = {
         customer: { fullName: document.getElementById('coName').value.trim(), mobile: document.getElementById('coMobile').value.trim(), email: document.getElementById('coEmail').value.trim() || undefined },
