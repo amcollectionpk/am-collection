@@ -399,7 +399,8 @@
     'black-skeleton-chronograph-watch-for-men': ['/assets/watches/black-skeleton-2.jpg', '/assets/watches/black-skeleton-3.jpg', '/assets/watches/black-skeleton-4.jpg', '/assets/watches/black-skeleton-5.jpg'],
     'diamond-stone-mens-luxury-fashion-watch-black': ['/assets/watches/diamond-stone-black-2.jpg', '/assets/watches/diamond-stone-black-3.jpg', '/assets/watches/diamond-stone-black-4.jpg', '/assets/watches/diamond-stone-black-5.jpg', '/assets/watches/diamond-stone-black-6.jpg', '/assets/watches/diamond-stone-black-7.jpg', '/assets/watches/diamond-stone-black-8.jpg', '/assets/watches/diamond-stone-black-9.jpg'],
     'cartier-tank-watch': ['/assets/watches/cartier-tank-2.jpg', '/assets/watches/cartier-tank-3.jpg', '/assets/watches/cartier-tank-4.jpg'],
-    'jakuta-zipper-hoodie-sleeveless': ['/assets/hoodies/jakuta-2.jpg', '/assets/hoodies/jakuta-3.jpg', '/assets/hoodies/jakuta-4.jpg', '/assets/hoodies/jakuta-5.jpg']
+    'jakuta-zipper-hoodie-sleeveless': ['/assets/hoodies/jakuta-2.jpg', '/assets/hoodies/jakuta-3.jpg', '/assets/hoodies/jakuta-4.jpg', '/assets/hoodies/jakuta-5.jpg'],
+    'black-rubber-strap-watch-for-men': ['/assets/watches/black-rubber-strap-2.jpg', '/assets/watches/black-rubber-strap-3.jpg', '/assets/watches/black-rubber-strap-4.jpg', '/assets/watches/black-rubber-strap-5.jpg', '/assets/watches/black-rubber-strap-6.jpg', '/assets/watches/black-rubber-strap-7.jpg', '/assets/watches/black-rubber-strap-8.jpg']
   };
 
   function viewProduct(slug) {
