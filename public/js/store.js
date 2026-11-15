@@ -395,12 +395,12 @@
     'men-color-block-fleece-hoodie-navy': ['/assets/hoodies/hoodie-size-chart.jpg'],
     'men-color-block-fleece-hoodie-olive': ['/assets/hoodies/hoodie-size-chart.jpg'],
     'rolex-datejust': ['/assets/watches/rolex-datejust-gold.jpg', '/assets/watches/rolex-datejust-blue.jpg', '/assets/watches/rolex-datejust-black-2.jpg', '/assets/watches/rolex-datejust-maroon.jpg', '/assets/watches/rolex-datejust-green.jpg'],
-    'diamond-stone-mens-luxury-fashion-watch': ['/assets/watches/diamond-stone-green-2.jpg', '/assets/watches/diamond-stone-green-3.jpg'],
+    'diamond-stone-mens-luxury-fashion-watch': ['/assets/watches/diamond-stone-green-2.jpg', '/assets/watches/diamond-stone-green-3.jpg', '/assets/watches/diamond-stone-green-video.mp4'],
     'black-skeleton-chronograph-watch-for-men': ['/assets/watches/black-skeleton-2.jpg', '/assets/watches/black-skeleton-3.jpg', '/assets/watches/black-skeleton-4.jpg', '/assets/watches/black-skeleton-5.jpg', '/assets/watches/black-skeleton-6.jpg', '/assets/watches/black-skeleton-video.mp4'],
     'diamond-stone-mens-luxury-fashion-watch-black': ['/assets/watches/diamond-stone-black-2.jpg', '/assets/watches/diamond-stone-black-3.jpg', '/assets/watches/diamond-stone-black-4.jpg', '/assets/watches/diamond-stone-black-5.jpg', '/assets/watches/diamond-stone-black-6.jpg', '/assets/watches/diamond-stone-black-7.jpg', '/assets/watches/diamond-stone-black-8.jpg', '/assets/watches/diamond-stone-black-9.jpg'],
     'cartier-tank-watch': ['/assets/watches/cartier-tank-2.jpg', '/assets/watches/cartier-tank-3.jpg', '/assets/watches/cartier-tank-4.jpg'],
     'jakuta-zipper-hoodie-sleeveless': ['/assets/hoodies/jakuta-2.jpg', '/assets/hoodies/jakuta-3.jpg', '/assets/hoodies/jakuta-4.jpg', '/assets/hoodies/jakuta-5.jpg'],
-    'black-rubber-strap-watch-for-men': ['/assets/watches/black-rubber-strap-2.jpg', '/assets/watches/black-rubber-strap-3.jpg', '/assets/watches/black-rubber-strap-4.jpg', '/assets/watches/black-rubber-strap-5.jpg', '/assets/watches/black-rubber-strap-6.jpg', '/assets/watches/black-rubber-strap-7.jpg', '/assets/watches/black-rubber-strap-8.jpg'],
+    'black-rubber-strap-watch-for-men': ['/assets/watches/black-rubber-strap-2.jpg', '/assets/watches/black-rubber-strap-3.jpg', '/assets/watches/black-rubber-strap-4.jpg', '/assets/watches/black-rubber-strap-5.jpg', '/assets/watches/black-rubber-strap-6.jpg', '/assets/watches/black-rubber-strap-7.jpg', '/assets/watches/black-rubber-strap-8.jpg', '/assets/watches/fitross-video.mp4'],
     'mens-comfort-fit-strap-watch': ['/assets/watches/comfort-fit-2.jpg', '/assets/watches/comfort-fit-3.jpg', '/assets/watches/comfort-fit-4.jpg', '/assets/watches/comfort-fit-5.jpg']
   };
 
