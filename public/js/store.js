@@ -150,12 +150,12 @@
           '<button class="btn btn-sm" data-wish="' + esc(p.slug) + '" title="Wishlist">' + (wished ? '♥' : '♡') + '</button>' +
         '</div></div></article>';
   }
-  function addToCart(p, qty) {
+  function addToCart(p, qty, size) {
     qty = Math.max(1, qty || 1);
     var found = null;
-    cart.forEach(function (c) { if (c.slug === p.slug) found = c; });
+    cart.forEach(function (c) { if (c.slug === p.slug && (c.size || null) === (size || null)) found = c; });
     if (found) found.qty = Math.min(found.qty + qty, Math.max(1, p.stock_qty || 20));
-    else cart.push({ productId: p.id, slug: p.slug, name: p.name, sku: p.sku, price: p.price, image: p.image_url, qty: qty, stock: p.stock_qty || 20 });
+    else cart.push({ productId: p.id, slug: p.slug, name: p.name, sku: p.sku, price: p.price, image: p.image_url, qty: qty, stock: p.stock_qty || 20, size: size || null });
     saveCart();
   }
   function bindCardButtons(root) {
@@ -426,6 +426,7 @@
         '<p class="muted">' + (p.stock_qty > 0 ? 'In stock — ready to dispatch' : 'Out of stock') + ' · Delivery Rs. 200 (FREE on orders Rs. 5,000+)</p>' +
         '<p>' + esc(p.description || '') + '</p>' +
         sizeHtml +
+        (isHoodie ? '<div class="pd-size"><span class="small muted">Size — select one *</span><div class="size-btns" id="pdSizes">' + ['M', 'L', 'XL', 'XXL'].map(function (s) { return '<button type="button" data-size="' + s + '">' + s + '</button>'; }).join('') + '</div><p class="form-error" id="pdSizeErr" style="display:none">Please select a size first.</p></div>' : '') +
         '<div class="pd-size-qty"><div><span class="small muted">Quantity</span><div class="qty-ctrl"><button id="qMinus" type="button">−</button><input id="qVal" value="1" readonly><button id="qPlus" type="button">+</button></div></div></div>' +
         '<div class="action-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">' +
           '<button class="btn btn-primary" id="pdAdd">Add to Cart</button>' +
@@ -466,8 +467,12 @@
       }
       document.getElementById('qMinus').addEventListener('click', function () { qty = Math.max(1, qty - 1); document.getElementById('qVal').value = qty; });
       document.getElementById('qPlus').addEventListener('click', function () { qty = Math.min(p.stock_qty || 20, qty + 1); document.getElementById('qVal').value = qty; });
-      document.getElementById('pdAdd').addEventListener('click', function () { addToCart(p, qty); AMC.toast('Added to cart'); });
-      document.getElementById('pdBuy').addEventListener('click', function () { addToCart(p, qty); location.hash = '#/checkout'; });
+      var selSize = null;
+      var sizeBtns = document.querySelectorAll('#pdSizes button');
+      sizeBtns.forEach(function (b) { b.addEventListener('click', function () { selSize = b.getAttribute('data-size'); sizeBtns.forEach(function (x) { x.classList.toggle('sel', x === b); }); var e = document.getElementById('pdSizeErr'); if (e) e.style.display = 'none'; }); });
+      function needSize() { if (isHoodie && !selSize) { var e = document.getElementById('pdSizeErr'); if (e) e.style.display = 'block'; AMC.toast('Please select a size first'); return true; } return false; }
+      document.getElementById('pdAdd').addEventListener('click', function () { if (needSize()) return; addToCart(p, qty, selSize); AMC.toast('Added to cart'); });
+      document.getElementById('pdBuy').addEventListener('click', function () { if (needSize()) return; addToCart(p, qty, selSize); location.hash = '#/checkout'; });
       document.getElementById('pdWish').addEventListener('click', function () {
         var i = wishlist.indexOf(p.slug);
         if (i >= 0) { wishlist.splice(i, 1); this.textContent = '♡ Wishlist'; } else { wishlist.push(p.slug); this.textContent = '♥ Wishlisted'; }
@@ -501,7 +506,7 @@
     app.innerHTML = '<h1 class="section-title">My Cart</h1><div class="card">' +
       cart.map(function (c, i) {
         return '<div class="cart-row">' + (c.image ? '<img src="' + esc(c.image) + '" alt="">' : '<span>⌚</span>') +
-          '<div><a href="#/product/' + encodeURIComponent(c.slug) + '"><b>' + esc(c.name) + '</b></a><br><span class="muted small">' + rs(c.price) + ' each</span>' +
+          '<div><a href="#/product/' + encodeURIComponent(c.slug) + '"><b>' + esc(c.name) + '</b></a>' + (c.size ? '<br><span class="muted small">Size: ' + esc(c.size) + '</span>' : '') + '<br><span class="muted small">' + rs(c.price) + ' each</span>' +
           '<div class="qty-ctrl" style="margin-top:6px"><button data-dec="' + i + '">−</button><input value="' + c.qty + '" readonly><button data-inc="' + i + '">+</button></div></div>' +
           '<div style="text-align:right"><b>' + rs(c.price * c.qty) + '</b><br><button class="btn btn-sm btn-ghost" data-del="' + i + '">Remove</button></div></div>';
       }).join('') + summaryHtml(sub, del) +
@@ -543,7 +548,7 @@
       quote();
     }
     function quote() {
-      var items = cart.map(function (c) { return { productId: c.productId, quantity: c.qty }; });
+      var items = cart.map(function (c) { return { productId: c.productId, quantity: c.qty, size: c.size || undefined }; });
       api.post('/api/delivery/quote', { items: items, province: provEl.value || undefined, city: cityEl.value || undefined }).then(function (q) {
         document.getElementById('coSummary').innerHTML = summaryHtml(q.subtotal, q.deliveryFee);
       }).catch(function () {
@@ -562,7 +567,7 @@
         customer: { fullName: document.getElementById('coName').value.trim(), mobile: document.getElementById('coMobile').value.trim(), email: document.getElementById('coEmail').value.trim() || undefined },
         address: { province: provEl.value, city: cityEl.value, area: document.getElementById('coArea').value.trim(), houseAddress: document.getElementById('coHouse').value.trim(), postalCode: document.getElementById('coPostal').value.trim() || undefined },
         paymentMethod: pay,
-        items: cart.map(function (c) { return { productId: c.productId, quantity: c.qty }; })
+        items: cart.map(function (c) { return { productId: c.productId, quantity: c.qty, size: c.size || undefined }; })
       };
       var btn = document.getElementById('coPlace'); btn.disabled = true; btn.textContent = 'Placing order…';
       api.post('/api/orders', body, { 'Idempotency-Key': idemKey }).then(function (res) {
