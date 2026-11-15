@@ -254,6 +254,8 @@
         .concat(all.filter(function (p) { return p.category_slug === 'womens-watches'; }).sort(byNum));
       var slides = heroSlides(all);
       app.innerHTML =
+        '<a class="home-banner" href="#/shop"><img src="/assets/banner-watches-hoodies.jpg" alt="AM Collection \u2014 Watches and Hoodies"></a>' +
+        '<form class="home-search" id="headerSearch"><input type="search" id="headerSearchInput" placeholder="Search watches\u2026" aria-label="Search watches"><button type="submit">Search</button></form>' +
         '<section class="hero-slider" id="heroSlider" aria-label="Featured watches">' +
           '<div class="hero-slides" id="heroSlides">' + slides.map(function (s, i) {
             return '<div class="hero-slide"><section class="hero"><div>' +
@@ -284,6 +286,13 @@
         '<h2 class="section-title">Best Selling</h2>' + gridHtml(best) +
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
         gridHtml(flow);
+      var hs = document.getElementById('headerSearch');
+      if (hs) hs.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var q = document.getElementById('headerSearchInput').value.trim();
+        location.hash = '#/shop' + (q ? '?search=' + encodeURIComponent(q) : '');
+        if ((location.hash.replace(/^#\/?/, '').split('?')[0]) === 'shop') route();
+      });
       bindCardButtons(app);
       initHeroSlider();
       window.scrollTo(0, 0);
