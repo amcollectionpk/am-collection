@@ -27,9 +27,9 @@
     { id: 'EASYPAISA', name: 'Easypaisa', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — marked paid after verified confirmation.' },
     { id: 'NAYAPAY', name: 'NayaPay', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — marked paid after verified confirmation.' }
   ];
-  var DELIVERY_FLAT = 200, FREE_ABOVE = 5000;
+  var DELIVERY_FLAT = 100, FREE_ABOVE = 5000;
   var POLICIES = {
-    shipping: 'Orders are dispatched after confirmation and delivered through courier services across Pakistan. The delivery charge is shown clearly at checkout before you place your order — the standard charge is Rs. 200, and orders of Rs. 5,000 or more get FREE delivery. Some remote areas may have a different rate, always shown in the Order Summary. Delivery usually takes 2–5 working days depending on your city. You will receive your order number at confirmation and can track your parcel any time from the Track Order page.',
+    shipping: 'Orders are dispatched after confirmation and delivered through courier services across Pakistan. The delivery charge is shown clearly at checkout before you place your order — the standard charge is Rs. 100, and orders of Rs. 5,000 or more get FREE delivery. Some remote areas may have a different rate, always shown in the Order Summary. Delivery usually takes 2–5 working days depending on your city. You will receive your order number at confirmation and can track your parcel any time from the Track Order page.',
     returns: 'If you receive a damaged, defective or wrong item, contact us within 7 days of delivery with your order number. Items must be unused and in the packaging they arrived in for exchange or refund. Refunds for prepaid orders are sent back through the same payment method; COD refunds are arranged after the returned parcel is received and checked.',
     privacy: 'We collect only the information needed to process and deliver your order: your name, mobile number, email (optional) and delivery address. We never ask for your CNIC or date of birth at checkout. Your information is used for order processing, delivery and order updates, and is not sold to third parties. Payment confirmations for JazzCash, Easypaisa and NayaPay are accepted only after verified confirmation from the payment provider.',
     terms: 'By placing an order on AM Collection you agree that the prices, product details and stock shown at the time of ordering apply to your order; your order stores a snapshot of the product name and price so later changes never alter a placed order. Cash on Delivery orders are payable to the courier at delivery. We may call or message you to confirm a COD order before dispatch. Orders can be cancelled by the store if an item goes out of stock, with a full refund of any prepaid amount.'
@@ -37,7 +37,7 @@
   var POLICY_TITLES = { shipping: 'Shipping Policy', returns: 'Return & Refund Policy', privacy: 'Privacy Policy', terms: 'Terms & Conditions' };
   var FAQS = [
     { q: 'How do I place an order?', a: 'Add a watch to your cart, open the cart and tap Checkout. Enter your name, mobile number and delivery address, choose a payment method (Cash on Delivery, JazzCash, Easypaisa or NayaPay) and tap Place Order. You will get an order number like ORD-20261107-001 on the Order Placed page.' },
-    { q: 'What are the delivery charges?', a: 'The standard delivery charge is Rs. 200. Orders of Rs. 5,000 or more get FREE delivery. The exact charge is always shown in the Order Summary before you place the order — no hidden charges.' },
+    { q: 'What are the delivery charges?', a: 'The standard delivery charge is Rs. 100. Orders of Rs. 5,000 or more get FREE delivery. The exact charge is always shown in the Order Summary before you place the order — no hidden charges.' },
     { q: 'How can I pay?', a: 'You can pay Cash on Delivery when your parcel arrives, or pay through JazzCash, Easypaisa or NayaPay on the number 03147656328. Prepaid payments are marked paid only after verified confirmation from the payment provider.' },
     { q: 'How do I track my order?', a: 'Open the Track Order page and enter your order number and the mobile number used at checkout. You will see the current status — Pending Confirmation, Confirmed, Processing, Shipped or Delivered.' },
     { q: 'Can I return or exchange an item?', a: 'Yes — damaged, defective or wrong items can be returned or exchanged within 7 days of delivery. See the Return & Refund Policy page for full details and contact us on WhatsApp for help.' },
@@ -328,7 +328,7 @@
         '</section>' +
         '<div class="trust-row">' +
           '<div class="trust-box"><b>Cash on Delivery</b><span class="muted small">Pay at your doorstep</span></div>' +
-          '<div class="trust-box"><b>Delivery Rs. 200</b><span class="muted small">FREE on orders Rs. 5,000+</span></div>' +
+          '<div class="trust-box"><b>Delivery Rs. 100</b><span class="muted small">FREE on orders Rs. 5,000+</span></div>' +
           '<div class="trust-box"><b>Easy Payments</b><span class="muted small">JazzCash · Easypaisa · NayaPay</span></div>' +
           '<div class="trust-box"><b>7-Day Easy Return</b><span class="muted small">Damaged or wrong item</span></div>' +
         '</div>' +
@@ -432,7 +432,7 @@
         '<h1>' + esc(p.name) + '</h1>' +
         (sum.count ? '<p class="stars">' + '★★★★★'.slice(0, Math.round(sum.averageRating)) + ' <span class="muted small">' + sum.averageRating + ' (' + sum.count + ' reviews)</span></p>' : '') +
         '<p class="big-price">' + (p.wasPrice ? '<span class="was" style="color:#9a8f76;text-decoration:line-through;font-size:1rem">' + rs(p.wasPrice) + '</span> ' : '') + rs(p.price) + '</p>' +
-        '<p class="muted">' + (p.stock_qty > 0 ? 'In stock — ready to dispatch' : 'Out of stock') + ' · Delivery Rs. 200 (FREE on orders Rs. 5,000+)</p>' +
+        '<p class="muted">' + (p.stock_qty > 0 ? 'In stock — ready to dispatch' : 'Out of stock') + ' · Delivery Rs. 100 (FREE on orders Rs. 5,000+)</p>' +
         '<p>' + esc(p.description || '') + '</p>' +
         sizeHtml +
         (isHoodie ? '<div class="pd-size"><span class="small muted">Size — select one *</span><div class="size-btns" id="pdSizes">' + ['M', 'L', 'XL', 'XXL'].map(function (s) { return '<button type="button" data-size="' + s + '">' + s + '</button>'; }).join('') + '</div><p class="form-error" id="pdSizeErr" style="display:none">Please select a size first.</p></div>' : '') +
@@ -519,7 +519,7 @@
           '<div class="qty-ctrl" style="margin-top:6px"><button data-dec="' + i + '">−</button><input value="' + c.qty + '" readonly><button data-inc="' + i + '">+</button></div></div>' +
           '<div style="text-align:right"><b>' + rs(c.price * c.qty) + '</b><br><button class="btn btn-sm btn-ghost" data-del="' + i + '">Remove</button></div></div>';
       }).join('') + summaryHtml(sub, del) +
-      '<p class="muted small">Delivery is Rs. 200 — FREE on orders of Rs. 5,000 or more. Final delivery is confirmed at checkout.</p>' +
+      '<p class="muted small">Delivery is Rs. 100 — FREE on orders of Rs. 5,000 or more. Final delivery is confirmed at checkout.</p>' +
       '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"><a class="btn btn-primary" href="#/checkout">Proceed to Checkout</a><a class="btn" href="#/shop">Continue Shopping</a></div></div>';
     app.querySelectorAll('[data-inc]').forEach(function (b) { b.addEventListener('click', function () { var c = cart[Number(b.getAttribute('data-inc'))]; c.qty = Math.min(c.stock || 20, c.qty + 1); saveCart(); viewCart(); }); });
     app.querySelectorAll('[data-dec]').forEach(function (b) { b.addEventListener('click', function () { var c = cart[Number(b.getAttribute('data-dec'))]; c.qty = Math.max(1, c.qty - 1); saveCart(); viewCart(); }); });
@@ -716,7 +716,7 @@
     app.innerHTML = '<h1 class="section-title">About AM Collection</h1><div id="aboutPic"></div><div class="card policy-body">' +
       '<p>AM Collection is an online watch store in Pakistan, bringing stylish men\'s, luxury and sports watches to your doorstep at honest prices.</p>' +
       '<p>Premium Quality, Best Prices — Cash on Delivery across Pakistan. Pay cash at your doorstep, or through JazzCash, Easypaisa and NayaPay.</p>' +
-      '<p>Delivery is Rs. 200, and FREE on orders of Rs. 5,000 or more. Questions? Message us on WhatsApp any time.</p>' +
+      '<p>Delivery is Rs. 100, and FREE on orders of Rs. 5,000 or more. Questions? Message us on WhatsApp any time.</p>' +
       '<p><a class="btn btn-primary" href="#/shop">Shop Watches</a> <a class="btn" href="' + AMC.WHATSAPP_LINK + '" target="_blank" rel="noopener">WhatsApp Us</a></p></div>';
     api.get('/api/pages/about').then(function (d) {
       if (d && d.pictureUrl) { var b = document.getElementById('aboutPic'); if (b) b.innerHTML = '<img class="about-picture" src="' + esc(d.pictureUrl) + '" alt="AM Collection">'; }
