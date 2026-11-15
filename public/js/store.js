@@ -189,6 +189,9 @@
   }
 
   /* ---------- HOME ---------- */
+  /* Category tiles use the NEW watch photos (old watch-*.jpg removed) */
+  var CAT_TILE_IMG = { "Men's Watches": '/assets/watches/rolex-datejust-black-1.jpg', "Women's Watches": '/assets/watches/diamond-stone-green-1.jpg', "Smartwatches": '/assets/watches/black-skeleton-1.jpg' };
+  function catTileImg(c) { return CAT_TILE_IMG[c.name] || c.image_url || c.image || '/assets/watches/rolex-datejust-black-1.jpg'; }
   /* ---------- HERO SLIDER (Home): 5 slides, auto-play 2s, arrows + dots + swipe ---------- */
   var heroTimer = null;
   function heroSlides(all) {
@@ -332,7 +335,7 @@
         '<h2 class="section-title">Shop by Category <a href="#/categories">View All →</a></h2>' +
         '<div class="tiles">' + cats.map(function (c) {
           var count = all.filter(function (p) { return p.category_slug === c.slug; }).length;
-          return '<a class="tile" href="#/shop?category=' + encodeURIComponent(c.slug) + '"><img src="' + esc(c.image_url || c.image || '/assets/watches/watch-01.jpg') + '" alt="' + esc(c.name) + '"><small>' + (count ? count + ' watches' : 'Watches') + '</small><span>' + esc(c.name) + '</span></a>';
+          return '<a class="tile" href="#/shop?category=' + encodeURIComponent(c.slug) + '"><img src="' + esc(catTileImg(c)) + '" alt="' + esc(c.name) + '"><small>' + (count ? count + ' watches' : 'Watches') + '</small><span>' + esc(c.name) + '</span></a>';
         }).join('') + '</div>' +
         '<h2 class="section-title">Best Selling</h2>' + gridHtml(best) +
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
@@ -357,7 +360,7 @@
       var cats = r[0], all = r[1];
       app.innerHTML = '<h1 class="section-title">Categories</h1><div class="tiles">' + cats.map(function (c) {
         var count = all.filter(function (p) { return p.category_slug === c.slug; }).length;
-        return '<a class="tile" href="#/shop?category=' + encodeURIComponent(c.slug) + '"><img src="' + esc(c.image_url || c.image || '/assets/watches/watch-01.jpg') + '" alt="' + esc(c.name) + '"><small>' + count + ' watches</small><span>' + esc(c.name) + '</span></a>';
+        return '<a class="tile" href="#/shop?category=' + encodeURIComponent(c.slug) + '"><img src="' + esc(catTileImg(c)) + '" alt="' + esc(c.name) + '"><small>' + count + ' watches</small><span>' + esc(c.name) + '</span></a>';
       }).join('') + '</div>' +
       '<p class="muted" style="margin-top:14px">Looking for a deal? See <a href="#/offers">Special Offers</a> — free delivery on orders of Rs. 5,000 or more.</p>';
       window.scrollTo(0, 0);
