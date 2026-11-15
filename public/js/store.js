@@ -390,7 +390,8 @@
     'men-color-block-fleece-hoodie-black': ['/assets/hoodies/hoodie-2-black-closeup.jpg', '/assets/hoodies/hoodie-size-chart.jpg'],
     'men-color-block-fleece-hoodie-navy': ['/assets/hoodies/hoodie-size-chart.jpg'],
     'men-color-block-fleece-hoodie-olive': ['/assets/hoodies/hoodie-size-chart.jpg'],
-    'rolex-datejust': ['/assets/watches/rolex-datejust-gold.jpg', '/assets/watches/rolex-datejust-blue.jpg', '/assets/watches/rolex-datejust-black-2.jpg', '/assets/watches/rolex-datejust-maroon.jpg', '/assets/watches/rolex-datejust-green.jpg']
+    'rolex-datejust': ['/assets/watches/rolex-datejust-gold.jpg', '/assets/watches/rolex-datejust-blue.jpg', '/assets/watches/rolex-datejust-black-2.jpg', '/assets/watches/rolex-datejust-maroon.jpg', '/assets/watches/rolex-datejust-green.jpg'],
+    'diamond-stone-mens-luxury-fashion-watch': ['/assets/watches/diamond-stone-green-2.jpg', '/assets/watches/diamond-stone-green-3.jpg']
   };
 
   function viewProduct(slug) {
