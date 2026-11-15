@@ -148,6 +148,10 @@ label{display:grid;gap:6px;font-weight:600;font-size:.92rem;margin-bottom:12px}
 .pd-dots{position:absolute;left:50%;bottom:10px;transform:translateX(-50%);display:flex;gap:8px;z-index:3}
 .pd-dots button{width:9px;height:9px;border-radius:50%;border:1px solid var(--gold);background:transparent;cursor:pointer;padding:0}
 .pd-dots button.active{background:var(--gold)}
+.pd-size{margin-top:14px}
+.size-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.size-btns button{min-width:52px;padding:10px 12px;border-radius:10px;border:1px solid var(--gold2);background:#100e0b;color:var(--cream);font-weight:700;cursor:pointer}
+.size-btns button.sel{border-color:var(--gold);background:var(--gold);color:#14100a}
 .size-guide{margin-top:18px}
 .size-guide h3{margin:0 0 8px;font-size:1.05rem;color:var(--cream)}
 .size-guide .table{width:100%}
