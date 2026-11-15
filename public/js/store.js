@@ -412,7 +412,8 @@
       var gal = [p.image_url].concat(PRODUCT_GALLERY[p.slug] || []).filter(Boolean);
       var galHtml = gal.length > 1 ?
         '<div class="pd-gallery" id="pdGallery"><div class="pd-slides" id="pdSlides">' + gal.map(function (src) {
-          return '<div class="pd-slide"><img src="' + esc(src) + '" alt="' + esc(p.name) + '"></div>';
+          var isVid = /\.mp4(\?|$)/i.test(src);
+          return '<div class="pd-slide">' + (isVid ? '<video src="' + esc(src) + '" controls muted loop playsinline preload="metadata"></video>' : '<img src="' + esc(src) + '" alt="' + esc(p.name) + '">') + '</div>';
         }).join('') + '</div>' +
         '<button class="pd-arrow prev" id="pdPrev" type="button" aria-label="Previous image">\u2039</button>' +
         '<button class="pd-arrow next" id="pdNext" type="button" aria-label="Next image">\u203a</button>' +
