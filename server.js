@@ -92,10 +92,10 @@ function sizePriceFor(row, size) {
 // ---------- Delivery calculation (SERVER-SIDE ONLY — never trust client totals) ----------
 /**
  * Rules (editable via store_settings / env):
- *  - Standard delivery: Rs. 200 (matches user's checkout design: 2000 + 200 = 2200)
+ *  - Standard delivery: Rs. 100
  *  - FREE delivery on subtotal >= Rs. 5,000
  *  - Remote provinces (Balochistan, Gilgit-Baltistan): + Rs. 100
- *  - Same-city (store city, default Bahawalnagar) orders >= Rs. 3,000: Rs. 150
+ *  - Same-city (store city, default Bahawalnagar) orders >= Rs. 3,000: Rs. 100
  *  - + Rs. 50 per extra kg over 2kg if weight data is present on products
  */
 const DELIVERY = {
@@ -108,7 +108,7 @@ const DELIVERY = {
 function calculateDelivery({ subtotal, province, city, totalWeightKg = 0 }) {
   if (subtotal >= DELIVERY.freeAbove) return 0;
   let fee = DELIVERY.base;
-  if (city && city.toLowerCase() === DELIVERY.storeCity && subtotal >= 3000) fee = 150;
+  if (city && city.toLowerCase() === DELIVERY.storeCity && subtotal >= 3000) fee = 100;
   if (DELIVERY.remoteProvinces.map(p => p.toLowerCase()).includes(String(province || '').toLowerCase())) fee += DELIVERY.remoteSurcharge;
   if (totalWeightKg > 2) fee += Math.ceil(totalWeightKg - 2) * 50;
   return fee;
