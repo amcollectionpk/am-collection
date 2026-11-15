@@ -385,21 +385,47 @@
   }
 
   /* ---------- PRODUCT DETAILS ---------- */
+  /* ---------- PRODUCT GALLERY: extra images per product slug ---------- */
+  var PRODUCT_GALLERY = {
+    'men-color-block-fleece-hoodie-black': ['/assets/hoodies/hoodie-2-black-closeup.jpg', '/assets/hoodies/hoodie-size-chart.jpg'],
+    'men-color-block-fleece-hoodie-navy': ['/assets/hoodies/hoodie-size-chart.jpg'],
+    'men-color-block-fleece-hoodie-olive': ['/assets/hoodies/hoodie-size-chart.jpg']
+  };
+
   function viewProduct(slug) {
     app.innerHTML = '<p class="muted">Loading…</p>';
     loadProduct(slug).then(function (d) {
       if (!d) { app.innerHTML = '<div class="empty">Product not found. <a href="#/shop">Back to shop</a></div>'; return; }
       var p = d.product, qty = 1;
+      var gal = [p.image_url].concat(PRODUCT_GALLERY[p.slug] || []).filter(Boolean);
+      var galHtml = gal.length > 1 ?
+        '<div class="pd-gallery" id="pdGallery"><div class="pd-slides" id="pdSlides">' + gal.map(function (src) {
+          return '<div class="pd-slide"><img src="' + esc(src) + '" alt="' + esc(p.name) + '"></div>';
+        }).join('') + '</div>' +
+        '<button class="pd-arrow prev" id="pdPrev" type="button" aria-label="Previous image">\u2039</button>' +
+        '<button class="pd-arrow next" id="pdNext" type="button" aria-label="Next image">\u203a</button>' +
+        '<div class="pd-dots" id="pdDots">' + gal.map(function (s, i) {
+          return '<button type="button" data-dot="' + i + '"' + (i === 0 ? ' class="active"' : '') + ' aria-label="Go to image ' + (i + 1) + '"></button>';
+        }).join('') + '</div></div>' :
+        '<div class="pd-img"><img src="' + esc(p.image_url || '') + '" alt="' + esc(p.name) + '"></div>';
+      var isHoodie = /hoodie/i.test(p.slug);
+      var sizeHtml = isHoodie ?
+        '<div class="size-guide"><h3>Size Guide (inches)</h3><table class="table"><thead><tr><th>Size</th><th>Chest</th><th>Length</th><th>Waist</th><th>Length</th></tr></thead><tbody>' +
+        '<tr><td><b>M</b></td><td>18</td><td>25</td><td>26-29</td><td>38</td></tr>' +
+        '<tr><td><b>L</b></td><td>19</td><td>26</td><td>30-32</td><td>38</td></tr>' +
+        '<tr><td><b>XL</b></td><td>20</td><td>28</td><td>33-35</td><td>40</td></tr>' +
+        '</tbody></table></div>' : '';
       var sum = d.reviewSummary || { count: 0, averageRating: 0 };
       app.innerHTML =
         '<p class="small"><a href="#/">Home</a> / <a href="#/shop?category=' + encodeURIComponent(p.category_slug) + '">' + esc(p.category_name || 'Watches') + '</a> / ' + esc(p.name) + '</p>' +
-        '<div class="pd"><div class="pd-img"><img src="' + esc(p.image_url || '') + '" alt="' + esc(p.name) + '"></div>' +
+        '<div class="pd">' + galHtml +
         '<div><span class="muted small">' + esc(p.category_name || '') + (p.sku ? ' · SKU ' + esc(p.sku) : '') + '</span>' +
         '<h1>' + esc(p.name) + '</h1>' +
         (sum.count ? '<p class="stars">' + '★★★★★'.slice(0, Math.round(sum.averageRating)) + ' <span class="muted small">' + sum.averageRating + ' (' + sum.count + ' reviews)</span></p>' : '') +
         '<p class="big-price">' + (p.wasPrice ? '<span class="was" style="color:#9a8f76;text-decoration:line-through;font-size:1rem">' + rs(p.wasPrice) + '</span> ' : '') + rs(p.price) + '</p>' +
         '<p class="muted">' + (p.stock_qty > 0 ? 'In stock — ready to dispatch' : 'Out of stock') + ' · Delivery Rs. 200 (FREE on orders Rs. 5,000+)</p>' +
         '<p>' + esc(p.description || '') + '</p>' +
+        sizeHtml +
         '<div class="pd-size-qty"><div><span class="small muted">Quantity</span><div class="qty-ctrl"><button id="qMinus" type="button">−</button><input id="qVal" value="1" readonly><button id="qPlus" type="button">+</button></div></div></div>' +
         '<div class="action-row" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:16px">' +
           '<button class="btn btn-primary" id="pdAdd">Add to Cart</button>' +
@@ -416,6 +442,28 @@
         '<p class="form-error" id="revErr"></p><button class="btn btn-primary" type="submit">Submit Review</button>' +
         '<p class="muted small">Reviews appear publicly after admin approval.</p></form></div>' +
         '<h2 class="section-title">You may also like</h2><div id="relGrid"></div>';
+      var galIdx = 0;
+      var pdTrack = document.getElementById('pdSlides');
+      function pdShow(i) {
+        if (!pdTrack) return;
+        galIdx = (i + gal.length) % gal.length;
+        pdTrack.style.transform = 'translateX(-' + (galIdx * 100) + '%)';
+        document.querySelectorAll('#pdDots button').forEach(function (b, j) { b.classList.toggle('active', j === galIdx); });
+      }
+      var pdPrev = document.getElementById('pdPrev');
+      var pdNext = document.getElementById('pdNext');
+      if (pdPrev) pdPrev.addEventListener('click', function () { pdShow(galIdx - 1); });
+      if (pdNext) pdNext.addEventListener('click', function () { pdShow(galIdx + 1); });
+      document.querySelectorAll('#pdDots button').forEach(function (b) { b.addEventListener('click', function () { pdShow(Number(b.getAttribute('data-dot'))); }); });
+      var pdGal = document.getElementById('pdGallery');
+      if (pdGal) {
+        var pdSX = 0;
+        pdGal.addEventListener('touchstart', function (e) { pdSX = e.touches[0].clientX; }, { passive: true });
+        pdGal.addEventListener('touchend', function (e) {
+          var dx = e.changedTouches[0].clientX - pdSX;
+          if (Math.abs(dx) > 40) pdShow(galIdx + (dx < 0 ? 1 : -1));
+        }, { passive: true });
+      }
       document.getElementById('qMinus').addEventListener('click', function () { qty = Math.max(1, qty - 1); document.getElementById('qVal').value = qty; });
       document.getElementById('qPlus').addEventListener('click', function () { qty = Math.min(p.stock_qty || 20, qty + 1); document.getElementById('qVal').value = qty; });
       document.getElementById('pdAdd').addEventListener('click', function () { addToCart(p, qty); AMC.toast('Added to cart'); });
