@@ -243,6 +243,46 @@
     restart();
   }
 
+  /* ---------- HOODIE RAIL (Home): hanger-style auto slider ---------- */
+  var hoodieTimer = null;
+  var hoodieSlides = [
+    { slug: 'men-color-block-fleece-hoodie-navy', name: 'Men Color Block Fleece Hoodie \u2014 Navy', img: '/assets/hoodies/hoodie-1-navy.jpg' },
+    { slug: 'men-color-block-fleece-hoodie-black', name: 'Men Color Block Fleece Hoodie \u2014 Black', img: '/assets/hoodies/hoodie-2-black.jpg' },
+    { slug: 'men-color-block-fleece-hoodie-olive', name: 'Men Color Block Fleece Hoodie \u2014 Olive', img: '/assets/hoodies/hoodie-3-olive.jpg' },
+    { slug: 'jakuta-zipper-hoodie-sleeveless', name: 'JAKUTA Zipper Hoodie (Sleeveless Edition)', img: '/assets/hoodies/hoodie-4-sleeveless.jpg' }
+  ];
+  function initHoodieRail() {
+    var rail = document.getElementById('hoodieRail');
+    if (!rail) return;
+    var cards = Array.prototype.slice.call(rail.querySelectorAll('.hoodie-card'));
+    if (!cards.length) return;
+    var active = 0;
+    function center(card) { try { card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch (e) {} }
+    function show(i) {
+      active = (i + cards.length) % cards.length;
+      cards.forEach(function (c, j) { c.classList.toggle('active', j === active); });
+      center(cards[active]);
+    }
+    function restart() {
+      if (hoodieTimer) clearInterval(hoodieTimer);
+      hoodieTimer = setInterval(function () {
+        if (!document.getElementById('hoodieRail')) { clearInterval(hoodieTimer); hoodieTimer = null; return; }
+        show(active + 1);
+      }, 3000);
+    }
+    cards.forEach(function (c, i) {
+      c.addEventListener('click', function () {
+        if (i === active) { location.hash = '#/product/' + encodeURIComponent(c.getAttribute('data-slug')); return; }
+        show(i); restart();
+      });
+    });
+    rail.addEventListener('mouseenter', function () { if (hoodieTimer) { clearInterval(hoodieTimer); hoodieTimer = null; } });
+    rail.addEventListener('mouseleave', function () { restart(); });
+    rail.addEventListener('touchstart', function () { if (hoodieTimer) { clearInterval(hoodieTimer); hoodieTimer = null; } }, { passive: true });
+    show(0);
+    restart();
+  }
+
   function viewHome() {
     app.innerHTML = '<p class="muted">Loading…</p>';
     Promise.all([loadCategories(), loadProducts({ sort: 'popular' })]).then(function (r) {
@@ -256,6 +296,17 @@
       app.innerHTML =
         '<a class="home-banner" href="#/shop"><img src="/assets/banner-watches-hoodies.jpg" alt="AM Collection \u2014 Watches and Hoodies"></a>' +
         '<form class="home-search" id="headerSearch"><input type="search" id="headerSearchInput" placeholder="Search watches\u2026" aria-label="Search watches"><button type="submit">Search</button></form>' +
+        '<h2 class="section-title">Hoodies</h2>' +
+        '<section class="hoodie-rail" id="hoodieRail" aria-label="Hoodies">' +
+          '<div class="hoodie-rail-bar"></div>' +
+          '<div class="hoodie-track" id="hoodieTrack">' + hoodieSlides.map(function (h, i) {
+            return '<button class="hoodie-card' + (i === 0 ? ' active' : '') + '" type="button" data-idx="' + i + '" data-slug="' + esc(h.slug) + '">' +
+              '<span class="hoodie-hook"></span>' +
+              '<img src="' + esc(h.img) + '" alt="' + esc(h.name) + '" loading="lazy">' +
+              '<span class="hoodie-name">' + esc(h.name) + '</span>' +
+            '</button>';
+          }).join('') + '</div>' +
+        '</section>' +
         '<section class="hero-slider" id="heroSlider" aria-label="Featured watches">' +
           '<div class="hero-slides" id="heroSlides">' + slides.map(function (s, i) {
             return '<div class="hero-slide"><section class="hero"><div>' +
@@ -295,6 +346,7 @@
       });
       bindCardButtons(app);
       initHeroSlider();
+      initHoodieRail();
       window.scrollTo(0, 0);
     });
   }
