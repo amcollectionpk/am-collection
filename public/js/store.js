@@ -191,7 +191,7 @@
 
   /* ---------- HOME ---------- */
   /* Category tiles use the NEW watch photos (old watch-*.jpg removed) */
-  var CAT_TILE_IMG = { "Men's Watches": '/assets/watches/rolex-datejust-black-1.jpg', "Women's Watches": '/assets/watches/diamond-stone-green-1.jpg', "Smartwatches": '/assets/watches/black-skeleton-1.jpg' };
+  var CAT_TILE_IMG = { "Men's Watches": '/assets/watches/rolex-datejust-black-1.jpg', "Women's Watches": '/assets/watches/luxury-rose-gold-womens-1.jpg', "Smartwatches": '/assets/watches/black-skeleton-1.jpg' };
   function catTileImg(c) { return CAT_TILE_IMG[c.name] || c.image_url || c.image || '/assets/watches/rolex-datejust-black-1.jpg'; }
   /* ---------- HERO SLIDER (Home): 11 slides, auto-play 2s, arrows + dots + swipe ---------- */
   var heroTimer = null;
