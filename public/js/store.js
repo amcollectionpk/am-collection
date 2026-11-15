@@ -403,7 +403,8 @@
     'black-rubber-strap-watch-for-men': ['/assets/watches/black-rubber-strap-2.jpg', '/assets/watches/black-rubber-strap-3.jpg', '/assets/watches/black-rubber-strap-4.jpg', '/assets/watches/black-rubber-strap-5.jpg', '/assets/watches/black-rubber-strap-6.jpg', '/assets/watches/black-rubber-strap-7.jpg', '/assets/watches/black-rubber-strap-8.jpg', '/assets/watches/fitross-video.mp4'],
     'mens-comfort-fit-strap-watch': ['/assets/watches/comfort-fit-2.jpg', '/assets/watches/comfort-fit-3.jpg', '/assets/watches/comfort-fit-4.jpg', '/assets/watches/comfort-fit-5.jpg'],
     'mens-hoursly-luxury-skeleton-watch': ['/assets/watches/hoursly-skeleton-2.jpg', '/assets/watches/hoursly-skeleton-3.jpg', '/assets/watches/hoursly-skeleton-video.mp4'],
-    'womens-lightweight-and-comfortable-for-all-day-wear-watch': ['/assets/watches/womens-lightweight-watch-2.jpg', '/assets/watches/womens-lightweight-watch-3.jpg']
+    'womens-lightweight-and-comfortable-for-all-day-wear-watch': ['/assets/watches/womens-lightweight-watch-2.jpg', '/assets/watches/womens-lightweight-watch-3.jpg'],
+    'womens-red-silicone-diamond-watch-with-gold-case': ['/assets/watches/womens-red-silicone-diamond-2.jpg', '/assets/watches/womens-red-silicone-diamond-3.jpg', '/assets/watches/womens-red-silicone-diamond-4.jpg']
   };
 
   function viewProduct(slug) {
