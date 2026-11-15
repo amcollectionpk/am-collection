@@ -193,7 +193,7 @@
   /* Category tiles use the NEW watch photos (old watch-*.jpg removed) */
   var CAT_TILE_IMG = { "Men's Watches": '/assets/watches/rolex-datejust-black-1.jpg', "Women's Watches": '/assets/watches/luxury-rose-gold-womens-1.jpg', "Smartwatches": '/assets/watches/smartwatch-1.jpg' };
   function catTileImg(c) { return CAT_TILE_IMG[c.name] || c.image_url || c.image || '/assets/watches/rolex-datejust-black-1.jpg'; }
-  /* ---------- HERO SLIDER (Home): 12 slides, auto-play 2s, arrows + dots + swipe ---------- */
+  /* ---------- HERO SLIDER (Home): 13 slides, auto-play 2s, arrows + dots + swipe ---------- */
   var heroTimer = null;
   function heroSlides(all) {
     function bySlug(slug) { var f = all.filter(function (p) { return p.slug === slug; }); return f[0] || null; }
@@ -209,7 +209,8 @@
       { slug: 'womens-lightweight-and-comfortable-for-all-day-wear-watch', kick: "WOMEN'S WATCHES", title: 'Lightweight Comfort,<br><em>All Day Wear</em>', text: "Women's Lightweight And Comfortable For All Day Wear Watch — Cash on Delivery across Pakistan", cta: 'Shop Now', href: '#/product/womens-lightweight-and-comfortable-for-all-day-wear-watch', img: '/assets/watches/womens-lightweight-watch-1.jpg', alt: "Women's Lightweight And Comfortable For All Day Wear Watch" },
       { slug: 'womens-red-silicone-diamond-watch-with-gold-case', kick: "WOMEN'S WATCHES", title: 'Red Silicone,<br><em>Gold Case</em>', text: "Women's Red Silicone Diamond Watch with Gold Case — Cash on Delivery across Pakistan", cta: 'Shop Now', href: '#/product/womens-red-silicone-diamond-watch-with-gold-case', img: '/assets/watches/womens-red-silicone-diamond-1.jpg', alt: "Women's Red Silicone Diamond Watch with Gold Case" },
       { slug: 'luxury-rose-gold-womens-watch-with-crystal-diamond', kick: "WOMEN'S WATCHES", title: 'Rose Gold Luxury,<br><em>Crystal Diamond</em>', text: "Luxury Rose Gold Women's Watch with Crystal Diamond — Cash on Delivery across Pakistan", cta: 'Shop Now', href: '#/product/luxury-rose-gold-womens-watch-with-crystal-diamond', img: '/assets/watches/luxury-rose-gold-womens-1.jpg', alt: "Luxury Rose Gold Women's Watch with Crystal Diamond" },
-      { slug: 'smart-watch-with-round-digital-display-bluetooth', kick: 'SMARTWATCHES', title: 'Smart Watch,<br><em>Round Digital Display</em>', text: 'Smart Watch with Round Digital Display & Bluetooth — Cash on Delivery across Pakistan', cta: 'Shop Now', href: '#/product/smart-watch-with-round-digital-display-bluetooth', img: '/assets/watches/smartwatch-1.jpg', alt: 'Smart Watch with Round Digital Display & Bluetooth' }
+      { slug: 'smart-watch-with-round-digital-display-bluetooth', kick: 'SMARTWATCHES', title: 'Smart Watch,<br><em>Round Digital Display</em>', text: 'Smart Watch with Round Digital Display & Bluetooth — Cash on Delivery across Pakistan', cta: 'Shop Now', href: '#/product/smart-watch-with-round-digital-display-bluetooth', img: '/assets/watches/smartwatch-1.jpg', alt: 'Smart Watch with Round Digital Display & Bluetooth' },
+      { slug: 'new-series-11-bluetooth-smart-watch-with-7-straps-waterproof', kick: 'SMARTWATCHES', title: 'Series 11,<br><em>7 Straps Waterproof</em>', text: 'New Series 11 Bluetooth Smart Watch With 7 Straps — Cash on Delivery across Pakistan', cta: 'Shop Now', href: '#/product/new-series-11-bluetooth-smart-watch-with-7-straps-waterproof', img: '/assets/watches/series11-smartwatch-1.jpg', alt: 'New Series 11 Bluetooth Smart Watch With 7 Straps Waterproof' }
     ];
     return defs.map(function (d) {
       var p = d.slug ? bySlug(d.slug) : null;
@@ -413,7 +414,8 @@
     'womens-lightweight-and-comfortable-for-all-day-wear-watch': ['/assets/watches/womens-lightweight-watch-2.jpg', '/assets/watches/womens-lightweight-watch-3.jpg'],
     'womens-red-silicone-diamond-watch-with-gold-case': ['/assets/watches/womens-red-silicone-diamond-2.jpg', '/assets/watches/womens-red-silicone-diamond-3.jpg', '/assets/watches/womens-red-silicone-diamond-4.jpg'],
     'luxury-rose-gold-womens-watch-with-crystal-diamond': ['/assets/watches/luxury-rose-gold-womens-2.jpg', '/assets/watches/luxury-rose-gold-womens-3.jpg', '/assets/watches/luxury-rose-gold-womens-4.jpg'],
-    'smart-watch-with-round-digital-display-bluetooth': ['/assets/watches/smartwatch-2.jpg', '/assets/watches/smartwatch-3.jpg', '/assets/watches/smartwatch-4.jpg', '/assets/watches/smartwatch-5.jpg', '/assets/watches/smartwatch-6.jpg']
+    'smart-watch-with-round-digital-display-bluetooth': ['/assets/watches/smartwatch-2.jpg', '/assets/watches/smartwatch-3.jpg', '/assets/watches/smartwatch-4.jpg', '/assets/watches/smartwatch-5.jpg', '/assets/watches/smartwatch-6.jpg'],
+    'new-series-11-bluetooth-smart-watch-with-7-straps-waterproof': ['/assets/watches/series11-smartwatch-2.jpg', '/assets/watches/series11-smartwatch-3.jpg', '/assets/watches/series11-smartwatch-4.jpg', '/assets/watches/series11-smartwatch-5.jpg']
   };
 
   function viewProduct(slug) {
