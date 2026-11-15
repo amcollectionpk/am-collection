@@ -68,6 +68,11 @@ label{display:grid;gap:6px;font-weight:600;font-size:.92rem;margin-bottom:12px}
 .cat-bar{max-width:1180px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px}
 .cat-bar a{white-space:nowrap;padding:6px 13px;border:1px solid var(--border);border-radius:999px;color:var(--ink);font-size:.88rem;font-weight:500}
 .cat-bar a:hover{border-color:var(--gold);text-decoration:none;color:var(--gold-soft)}
+.home-banner{display:block;margin:0 0 14px;border-radius:20px;overflow:hidden;border:1px solid var(--gold2)}
+.home-banner img{display:block;width:100%;height:auto}
+.home-search{display:flex;gap:8px;margin:0 0 16px}
+.home-search input{border-radius:999px}
+.home-search button{background:linear-gradient(135deg,#e8cf7a,#c9a227);border:0;color:#171204;font-weight:700;border-radius:999px;padding:0 18px;cursor:pointer}
 .bottom-nav{position:fixed;left:0;right:0;bottom:0;background:#060505;border-top:1px solid var(--gold2);display:flex;z-index:60}
 .bottom-nav a{flex:1;text-align:center;padding:7px 2px 9px;color:var(--dim);font-size:1.05rem;display:grid;gap:1px}
 .bottom-nav a span{font-size:.68rem;font-weight:600;letter-spacing:.04em}
