@@ -269,7 +269,7 @@
     var cards = Array.prototype.slice.call(rail.querySelectorAll('.hoodie-card'));
     if (!cards.length) return;
     var active = 0;
-    function center(card) { try { card.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' }); } catch (e) {} }
+    function center(card) { var track = document.getElementById('hoodieTrack'); if (!track) return; try { var tr = track.getBoundingClientRect(); var cr = card.getBoundingClientRect(); var x = track.scrollLeft + (cr.left - tr.left) - (track.clientWidth - card.offsetWidth) / 2; track.scrollTo({ left: x, behavior: 'smooth' }); } catch (e) {} }
     function show(i) {
       active = (i + cards.length) % cards.length;
       cards.forEach(function (c, j) { c.classList.toggle('active', j === active); });
