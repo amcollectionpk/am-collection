@@ -87,6 +87,7 @@
       setTimeout(function () { el.classList.remove('show'); }, 3200);
     },
     PAYMENT_NUMBER: '03147656328',
+    PAYMENT_TITLE: 'Muqaddas Bibi',
     WHATSAPP_LINK: 'https://wa.me/923147656328'
   };
 })();
