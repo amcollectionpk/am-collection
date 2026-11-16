@@ -337,12 +337,13 @@
       all.forEach(function (p) { if (p.slug === 'rolex-datejust') rolex = p; });
       var featImgs = rolex ? [rolex.image_url].concat(PRODUCT_GALLERY['rolex-datejust'] || []).filter(Boolean) : [];
       var hoodieCount = all.filter(function (p) { return /hoodie/i.test(p.slug); }).length;
-      var catTiles = cats.map(function (c) {
-        var count = all.filter(function (p) { return p.category_slug === c.slug; }).length;
-        return { name: c.name, href: '#/shop?category=' + encodeURIComponent(c.slug), img: catTileImg(c), count: count };
-      });
-      catTiles.push({ name: 'Hoodies', href: '#/shop?search=hoodie', img: '/assets/hoodies/hoodie-1-navy.jpg', count: hoodieCount });
+      var watchCount = all.filter(function (p) { return !/hoodie/i.test(p.slug); }).length;
+      var catTiles = [
+        { name: 'Watches', href: '#/shop?search=watch', img: '/assets/watches/rolex-datejust-black-1.jpg', count: watchCount },
+        { name: 'Hoodies', href: '#/shop?search=hoodie', img: '/assets/hoodies/hoodie-1-navy.jpg', count: hoodieCount }
+      ];
       app.innerHTML =
+        '<a class="home-banner" href="#/shop"><img src="/assets/banner-grand-opening.jpg" alt="AM Collection \u2014 Grand Opening, Flat 35% OFF"></a>' +
         '<section class="hero-slider" id="heroSlider" aria-label="Featured watches">' +
           '<div class="hero-slides" id="heroSlides">' + slides.map(function (s, i) {
             return '<div class="hero-slide"><section class="hero"><div>' +
