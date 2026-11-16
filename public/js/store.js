@@ -418,6 +418,11 @@
         '<p>Premium watches for every moment — classic style, modern designs, and honest prices. Every watch is selected for quality, durability, and a look that fits your everyday life.</p>' +
         '<a class="btn btn-primary" href="#/shop?search=watch">Explore Collection</a></div>' +
         '</section>' +
+        '<div class="outlet-banner">' +
+        '<svg class="outlet-wave" viewBox="0 0 1440 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0,18 C180,2 360,34 540,18 C720,2 900,34 1080,18 C1260,2 1380,34 1440,18 L1440,36 L0,36 Z" fill="#000"/></svg>' +
+        '<div class="outlet-inner">\uD83D\uDECD\uFE0F GRAND OPENING \u2014 Flat 35% OFF on All Watches &amp; Hoodies \u2728</div>' +
+        '<svg class="outlet-wave flip" viewBox="0 0 1440 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0,18 C180,2 360,34 540,18 C720,2 900,34 1080,18 C1260,2 1380,34 1440,18 L1440,36 L0,36 Z" fill="#000"/></svg>' +
+        '</div>' +
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
         '<h2 class="section-title">Why Choose Us</h2>' +
         '<div class="why-row">' +
