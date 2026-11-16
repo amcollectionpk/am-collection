@@ -75,7 +75,7 @@
     return '<div class="admin-table-wrap"><table class="table"><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th><th></th></tr></thead><tbody>' +
       orders.map(function (o) {
         return '<tr><td><strong>' + esc(o.order_number) + '</strong></td><td>' + esc(o.customer_name) + '<br><span class="muted small">' + esc(o.customer_phone) + '</span></td>' +
-          '<td>' + rs(o.grand_total) + '</td><td>' + esc(o.payment_method) + '<br>' + badge(o.payment_status) + '</td><td>' + badge(o.order_status) + '</td>' +
+          '<td>' + rs(o.grand_total) + '</td><td>' + esc(o.payment_method) + '<br>' + badge(o.payment_status) + (o.transaction_id ? '<br><span class="muted small">Txn ID: ' + esc(o.transaction_id) + '</span>' : '') + '</td><td>' + badge(o.order_status) + '</td>' +
           '<td>' + esc(new Date(o.created_at).toLocaleDateString()) + '</td><td><button class="btn btn-sm" data-view-order="' + esc(o.order_number) + '">View</button></td></tr>';
       }).join('') + '</tbody></table></div>';
   }
@@ -119,6 +119,7 @@
         '<div class="summary-line"><span>Delivery</span><span>' + rs(o.delivery_fee) + '</span></div>' +
         '<div class="summary-line total"><span>Total</span><span>' + rs(o.grand_total) + '</span></div>' +
         '<div class="summary-line"><span>Payment</span><strong>' + esc(label(o.payment_method)) + ' · ' + esc(label(o.payment_status)) + '</strong></div>' +
+        (o.transaction_id ? '<div class="summary-line"><span>Transaction ID</span><strong>' + esc(o.transaction_id) + '</strong></div>' : '') +
         (d.shipment ? '<p class="muted">Shipment: ' + esc(d.shipment.courier || '-') + ' · Tracking: ' + esc(d.shipment.tracking_number || '-') + ' · ' + esc(label(d.shipment.status)) + '</p>' : '') +
         '<div class="action-row no-print">' +
           '<button class="btn btn-primary" id="actConfirm">Confirm Order</button>' +
@@ -328,7 +329,7 @@
   function pagePayments() {
     setNav('payments');
     main.innerHTML = '<h1>Payments</h1><div id="payWrap"><div class="empty">Loading…</div></div>' +
-      '<div class="card" style="margin-top:14px"><h3 style="margin-top:0">Rules</h3><p class="muted">• COD order <strong>PAID tabhi</strong> hoga jab courier se cash collect ho — order details mein "COD Collected" mark karein.<br>• JazzCash / Easypaisa / NayaPay online payment sirf <strong>signed callback verify</strong> hone + amount/order match par PAID hoti hai (backend khud karta hai).<br>• Payment numbers: Easypaisa / JazzCash / NayaPay — <strong>' + AMC.PAYMENT_NUMBER + '</strong></p></div>';
+      '<div class="card" style="margin-top:14px"><h3 style="margin-top:0">Rules</h3><p class="muted">• COD order <strong>PAID tabhi</strong> hoga jab courier se cash collect ho — order details mein "COD Collected" mark karein.<br>• JazzCash / Easypaisa online payment sirf <strong>signed callback verify</strong> hone + amount/order match par PAID hoti hai (backend khud karta hai). Customer ki Transaction ID order details mein dikhti hai.<br>• Payment numbers: Easypaisa / JazzCash — <strong>' + AMC.PAYMENT_NUMBER + '</strong> (Title: ' + esc(AMC.PAYMENT_TITLE) + ')</p></div>';
     loadOrders('').then(function (orders) {
       var codPending = orders.filter(function (o) { return o.payment_method === 'COD' && String(o.payment_status).toUpperCase() !== 'PAID' && String(o.payment_status).toUpperCase() !== 'COD_COLLECTED'; });
       var failed = orders.filter(function (o) { return String(o.payment_status).toUpperCase() === 'FAILED'; });
@@ -380,7 +381,8 @@
       '<tr><th>Free Delivery</th><td>Rs. 5,000+ ke order par (DELIVERY_FREE_ABOVE)</td></tr>' +
       '<tr><th>Remote Province Surcharge</th><td>+ Rs. 100 — Balochistan, Gilgit-Baltistan (server.js DELIVERY)</td></tr>' +
       '<tr><th>Store City</th><td>Bahawalnagar (STORE_CITY) — same city Rs. 3,000+ par Rs. 150</td></tr>' +
-      '<tr><th>Payment Number</th><td>Easypaisa / JazzCash / NayaPay — ' + AMC.PAYMENT_NUMBER + ' (STORE_PAYMENT_NUMBER)</td></tr></table>' +
+      '<tr><th>Payment Number</th><td>Easypaisa / JazzCash — ' + AMC.PAYMENT_NUMBER + ' (STORE_PAYMENT_NUMBER)</td></tr>' +
+      '<tr><th>Payment Title</th><td>' + esc(AMC.PAYMENT_TITLE) + '</td></tr></table>' +
       '<p class="muted">Ye values change karne ke liye hosting par <code>.env</code> file edit karke server restart karein. City-wise alag rates database ki <code>delivery_rates</code> table mein bhi diye ja sakte hain.</p>' +
       '<h3>Categories</h3><div id="setCats">Loading…</div>' +
       '<h3>Policies</h3><p class="muted">Shipping / Return / Privacy / Terms ka text storefront code (<code>public/js/store.js</code> → POLICIES) mein hai — edit karke dobara deploy karein.</p></div>' +
