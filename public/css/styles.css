@@ -316,6 +316,10 @@ label{display:grid;gap:6px;font-weight:600;font-size:.92rem;margin-bottom:12px}
 .footer-brand{display:flex;gap:8px;align-items:center;font-size:1.15rem;color:#fff;font-weight:800}
 .site-footer p{color:#d1d5db}
 .footer-copy{text-align:center;padding:14px;border-top:1px solid #222;margin:0;font-size:.85rem;color:#9ca3af}
+.footer-social{display:flex;gap:16px;justify-content:center;padding:4px 14px 24px}
+.footer-social a{display:grid;place-items:center;width:42px;height:42px;padding:0;border:1px solid #444;border-radius:50%;color:#fff}
+.footer-social a:hover{border-color:var(--gold);text-decoration:none}
+.footer-social svg{display:block}
 .wa-float{position:fixed;right:16px;bottom:76px;z-index:70;width:56px;height:56px;border-radius:50%;background:var(--wa-green);display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.3)}
 .wa-float svg{width:30px;height:30px;fill:#fff}
 .wa-float:hover{text-decoration:none;filter:brightness(1.05)}
