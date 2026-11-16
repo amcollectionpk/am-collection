@@ -291,6 +291,7 @@
     rail.addEventListener('mouseenter', function () { if (hoodieTimer) { clearInterval(hoodieTimer); hoodieTimer = null; } });
     rail.addEventListener('mouseleave', function () { restart(); });
     rail.addEventListener('touchstart', function () { if (hoodieTimer) { clearInterval(hoodieTimer); hoodieTimer = null; } }, { passive: true });
+    rail.addEventListener('touchend', function () { restart(); }, { passive: true });
     show(0);
     restart();
   }
