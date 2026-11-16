@@ -10,7 +10,7 @@
 --     values wohi hain jo server likhta/parhta hai:
 --     PENDING_CONFIRMATION, CONFIRMED, PROCESSING, SHIPPED, DELIVERED,
 --     CANCELLED, RETURNED / PENDING, COD_PENDING, PAID, FAILED ...
---   * Payment methods TEXT hain: COD, JAZZCASH, EASYPAISA, NAYAPAY.
+--   * Payment methods TEXT hain: COD, JAZZCASH, EASYPAISA.
 -- Run:  psql "$DATABASE_URL" -f database/schema.sql
 -- Phir: psql "$DATABASE_URL" -f database/seed-watches.sql  (79 watches)
 -- Dono files idempotent hain — dobara chalane se nuqsan nahi hota.
@@ -148,6 +148,7 @@ CREATE TABLE IF NOT EXISTS orders (
     house_address    TEXT NOT NULL,
     postal_code      TEXT,
     payment_method   TEXT NOT NULL,
+    transaction_id   TEXT,
     subtotal         NUMERIC(12,2) NOT NULL CHECK (subtotal >= 0),
     discount_amount  NUMERIC(12,2) NOT NULL DEFAULT 0 CHECK (discount_amount >= 0),
     delivery_fee     NUMERIC(12,2) NOT NULL CHECK (delivery_fee >= 0),
