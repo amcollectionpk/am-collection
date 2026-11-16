@@ -355,6 +355,9 @@
       var slides = heroSlides(all);
       var hoodieCount = all.filter(function (p) { return /hoodie/i.test(p.slug); }).length;
       var watchCount = all.filter(function (p) { return !/hoodie/i.test(p.slug); }).length;
+      var premiumStrip = all.filter(function (p) { return !/hoodie/i.test(p.slug); }).map(function (p) {
+        return '<a href="#/product/' + esc(p.slug) + '"><img src="' + esc(p.image_url || '') + '" alt="' + esc(p.name) + '" loading="lazy"></a>';
+      }).join('');
       var catTiles = [
         { name: 'Watches', href: '#/shop?search=watch', img: '/assets/watches/rolex-datejust-black-1.jpg', count: watchCount },
         { name: 'Hoodies', href: '#/shop?search=hoodie', img: '/assets/hoodies/hoodie-1-navy.jpg', count: hoodieCount }
@@ -408,11 +411,13 @@
           '<button class="featured-arrow prev" id="featPrev" type="button" aria-label="Previous product">\u2039</button>' +
           '<button class="featured-arrow next" id="featNext" type="button" aria-label="Next product">\u203a</button>' +
         '</section>' : '') +
-        '<section class="premium-section"><div><span style="color:#e30613;letter-spacing:.28em;font-size:.72rem;font-weight:800">PREMIUM WATCH COLLECTION</span>' +
+        '<section class="premium-section">' +
+        '<div class="premium-strip"><div class="premium-track">' + premiumStrip + premiumStrip + '</div></div>' +
+        '<div class="premium-text"><span class="premium-pill">PREMIUM WATCH COLLECTION</span>' +
         '<h2>Timeless Elegance For Every Moment</h2>' +
         '<p>Premium watches for every moment — classic style, modern designs, and honest prices. Every watch is selected for quality, durability, and a look that fits your everyday life.</p>' +
-        '<a class="btn btn-primary" href="#/shop">Explore Collection</a></div>' +
-        '<div><a href="#/shop"><img src="/assets/banner-watches-hoodies.jpg" alt="AM Collection \u2014 Watches and Hoodies"></a></div></section>' +
+        '<a class="btn btn-primary" href="#/shop?search=watch">Explore Collection</a></div>' +
+        '</section>' +
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
         '<h2 class="section-title">Why Choose Us</h2>' +
         '<div class="why-row">' +
