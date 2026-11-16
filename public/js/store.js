@@ -309,23 +309,43 @@
   }
 
   /* ---------- FEATURED (Home): Rolex single-product carousel ---------- */
-  function initFeatured(imgs) {
+  function initFeatured() {
     var box = document.getElementById('featuredBox');
-    if (!box || !imgs || !imgs.length) return;
-    var img = document.getElementById('featImg');
-    if (!img) return;
-    var idx = 0;
-    function show(k) { idx = (k + imgs.length) % imgs.length; img.src = imgs[idx]; }
+    if (!box) return;
+    var cards = box.querySelectorAll('.feat-card');
+    if (!cards.length) return;
+    var n = cards.length, cur = 0, timer = null;
+    function paint() {
+      for (var i = 0; i < n; i++) {
+        var c = cards[i];
+        c.classList.remove('cur', 'side-l', 'side-r', 'hidden');
+        if (i === cur) c.classList.add('cur');
+        else if (i === (cur - 1 + n) % n) c.classList.add('side-l');
+        else if (i === (cur + 1) % n) c.classList.add('side-r');
+        else c.classList.add('hidden');
+      }
+    }
+    function go(k) { cur = (k + n) % n; paint(); }
+    function restart() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () {
+        if (!document.getElementById('featuredBox')) { clearInterval(timer); timer = null; return; }
+        go(cur + 1);
+      }, 3000);
+    }
     var pv = document.getElementById('featPrev'), nx = document.getElementById('featNext');
-    if (pv) pv.addEventListener('click', function () { show(idx - 1); });
-    if (nx) nx.addEventListener('click', function () { show(idx + 1); });
+    if (pv) pv.addEventListener('click', function () { go(cur - 1); restart(); });
+    if (nx) nx.addEventListener('click', function () { go(cur + 1); restart(); });
+    box.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
+    box.addEventListener('mouseleave', function () { restart(); });
     var sx = null;
     box.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
     box.addEventListener('touchend', function (e) {
       if (sx === null) return;
       var dx = e.changedTouches[0].clientX - sx; sx = null;
-      if (Math.abs(dx) > 40) show(idx + (dx < 0 ? 1 : -1));
+      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); restart(); }
     }, { passive: true });
+    paint(); restart();
   }
 
   function viewHome() {
@@ -333,9 +353,6 @@
     Promise.all([loadCategories(), loadProducts({ sort: 'popular' })]).then(function (r) {
       var cats = r[0], all = r[1];
       var slides = heroSlides(all);
-      var rolex = null;
-      all.forEach(function (p) { if (p.slug === 'rolex-datejust') rolex = p; });
-      var featImgs = rolex ? [rolex.image_url].concat(PRODUCT_GALLERY['rolex-datejust'] || []).filter(Boolean) : [];
       var hoodieCount = all.filter(function (p) { return /hoodie/i.test(p.slug); }).length;
       var watchCount = all.filter(function (p) { return !/hoodie/i.test(p.slug); }).length;
       var catTiles = [
@@ -376,15 +393,20 @@
           return '<a class="collection-tile" href="' + esc(t.href) + '"><img src="' + esc(t.img) + '" alt="' + esc(t.name) + '" loading="lazy"><span class="ct-overlay"></span><span class="ct-title">' + esc(t.name) + '</span><span class="ct-count">' + t.count + (t.count === 1 ? ' product' : ' products') + '</span></a>';
         }).join('') + '</div>' +
         '<h2 class="section-title">All Products</h2>' + gridHtml(all) +
-        (rolex ? '<div style="text-align:center;margin:30px 0 14px"><div style="letter-spacing:.28em;font-weight:800;font-size:.78rem;color:#e30613">FEATURED</div><h2 style="margin:6px 0 0;font-size:1.5rem">Our Signature Collection</h2></div>' +
-        '<section class="featured" id="featuredBox">' +
-          '<div class="featured-slide"><img id="featImg" src="' + esc(featImgs[0] || rolex.image_url) + '" alt="' + esc(rolex.name) + '">' +
-          '<div class="featured-info"><span class="kick">FEATURED WATCH</span><h3>' + esc(rolex.name) + '</h3>' +
-          '<p class="muted">Premium quality, comfortable daily wear — fluted bezel, diamond-look markers, stainless steel chain strap.</p>' +
-          '<p class="fprice">' + rs(rolex.price) + (rolex.wasPrice ? ' <s>' + rs(rolex.wasPrice) + '</s>' : '') + '</p>' +
-          '<div class="hero-cta"><a class="btn btn-primary" href="#/product/rolex-datejust">Shop Now</a></div></div></div>' +
-          '<button class="featured-arrow prev" id="featPrev" type="button" aria-label="Previous photo">\u2039</button>' +
-          '<button class="featured-arrow next" id="featNext" type="button" aria-label="Next photo">\u203a</button>' +
+        (all.length ? '<div style="text-align:center;margin:30px 0 14px"><div style="letter-spacing:.28em;font-weight:800;font-size:.78rem;color:#e30613">FEATURED</div><h2 style="margin:6px 0 0;font-size:1.5rem">Our Signature Collection</h2></div>' +
+        '<section class="featured" id="featuredBox" aria-label="Featured products">' +
+          '<div class="feat-track" id="featTrack">' +
+            all.map(function (p, i) {
+              return '<article class="feat-card hidden" data-idx="' + i + '">' +
+                '<a href="#/product/' + esc(p.slug) + '"><img src="' + esc(p.image_url || '') + '" alt="' + esc(p.name) + '" loading="lazy"></a>' +
+                '<div class="feat-info"><h3>' + esc(p.name) + '</h3>' +
+                '<p class="feat-price">' + (p.wasPrice ? '<s>' + rs(p.wasPrice) + '</s> ' : '') + rs(p.price) + '</p>' +
+                '<a class="feat-discover" href="#/product/' + esc(p.slug) + '">DISCOVER</a></div>' +
+              '</article>';
+            }).join('') +
+          '</div>' +
+          '<button class="featured-arrow prev" id="featPrev" type="button" aria-label="Previous product">\u2039</button>' +
+          '<button class="featured-arrow next" id="featNext" type="button" aria-label="Next product">\u203a</button>' +
         '</section>' : '') +
         '<section class="premium-section"><div><span style="color:#e30613;letter-spacing:.28em;font-size:.72rem;font-weight:800">PREMIUM WATCH COLLECTION</span>' +
         '<h2>Timeless Elegance For Every Moment</h2>' +
@@ -408,7 +430,7 @@
       bindCardButtons(app);
       initHeroSlider();
       initHoodieRail();
-      initFeatured(featImgs);
+      initFeatured();
       window.scrollTo(0, 0);
     });
   }
