@@ -66,7 +66,7 @@ label{display:grid;gap:6px;font-weight:600;font-size:.92rem;margin-bottom:12px}
 .brand:hover{text-decoration:none}
 .brand-logo{width:46px;height:46px;object-fit:cover;border-radius:50%;border:1px solid var(--border)}
 .brand-logo.sm{width:30px;height:30px}
-.brand-name{font-size:1.35rem;font-weight:900;line-height:1.05;letter-spacing:.01em}
+.brand-name{font-size:1.35rem;font-weight:900;line-height:1.05;letter-spacing:.01em;white-space:nowrap}
 .brand-name em{color:var(--red);font-style:normal}
 .brand-name small{display:block;font-family:'Archivo',sans-serif;font-size:.58rem;letter-spacing:.32em;color:var(--dim);font-weight:700}
 .header-search{flex:1;min-width:0;max-width:260px;display:flex;gap:8px}
@@ -100,6 +100,7 @@ label{display:grid;gap:6px;font-weight:600;font-size:.92rem;margin-bottom:12px}
 .bottom-nav a.active{color:#fff}
 @media(min-width:861px){.bottom-nav{display:none} body{padding-bottom:0}}
 @media(max-width:860px){.header-actions a[href="#/track"],.header-actions a[href="#/wishlist"]{display:none}.header-search{max-width:150px}}
+@media(max-width:640px){.header-inner{flex-wrap:wrap;row-gap:8px;padding:10px 12px}.brand{margin:0}.brand-logo{width:38px;height:38px}.brand-name{font-size:1.12rem}.header-actions{margin-left:auto}.header-search{order:3;flex:1 1 100%;max-width:none}}
 
 /* ---------- hero / collections / trust ---------- */
 .hero{background:#fff;border:0;border-radius:0;padding:26px 20px;display:grid;gap:16px;overflow:hidden}
