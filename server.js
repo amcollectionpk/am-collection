@@ -1,6 +1,6 @@
 /**
  * AM Collection — Node.js + Express Backend
- * Brand: AM Collection | Payments: COD, JazzCash, Easypaisa, NayaPay (03147656328)
+ * Brand: AM Collection | Payments: COD, JazzCash, Easypaisa (03147656328)
  * Features: Secure order creation, server-side delivery calculation,
  *           customer reviews with admin approval (PENDING -> APPROVED/REJECTED),
  *           transactional stock handling, idempotency (no duplicate orders),
@@ -55,6 +55,12 @@ const pool = new Pool({
   max: 20, idleTimeoutMillis: 30000,
 });
 pool.on('error', (e) => console.error('[PG] pool error', e.message));
+
+// ---------- Lightweight migration: Transaction ID (JazzCash/Easypaisa) ----------
+// Customer checkout par Transaction ID deta hai — orders table mein store hoti hai
+// aur admin dashboard mein customer details ke saath dikhti hai. Idempotent hai:
+// column pehle se ho to kuch nahi karta, is liye har restart par safe hai.
+pool.query('ALTER TABLE orders ADD COLUMN IF NOT EXISTS transaction_id TEXT').catch((e) => console.warn('[MIG] transaction_id column:', e.message));
 
 // ---------- Middleware ----------
 app.use(helmet());
@@ -197,7 +203,8 @@ function validateCheckout(body) {
   if (!a.city) errs.push('City is required');
   if (!a.area) errs.push('Area / Locality is required');
   if (!a.houseAddress || String(a.houseAddress).trim().length < 8) errs.push('Complete House Address is required');
-  if (!['COD', 'JAZZCASH', 'EASYPAISA', 'NAYAPAY'].includes(body.paymentMethod)) errs.push('Select a valid Payment Method (COD / JazzCash / Easypaisa / NayaPay)');
+  if (!['COD', 'JAZZCASH', 'EASYPAISA'].includes(body.paymentMethod)) errs.push('Select a valid Payment Method (COD / JazzCash / Easypaisa)');
+  if ((body.paymentMethod === 'JAZZCASH' || body.paymentMethod === 'EASYPAISA') && !(body.transactionId && String(body.transactionId).trim())) errs.push('Transaction ID is required for JazzCash / Easypaisa payment');
   if (!Array.isArray(body.items) || body.items.length === 0) errs.push('Cart is empty');
   // Per spec § Part D-2: NEVER ask for CNIC / DOB — reject if a client tries to send them as required data
   return errs;
@@ -384,8 +391,9 @@ app.post('/api/orders', optionalAuth, asyncH(async (req, res) => {
     // hai aur admin Orders mein usi waqt nazar ata hai — koi alag "save address"
     // step, prompt ya approval NAHI. Order Notes checkout par nahi manga jata.
     const cst = req.body.customer, adr = req.body.address;
-    const ord = await client.query(`INSERT INTO orders(order_number,idempotency_key,user_id,customer_name,customer_phone,customer_email,province,city,area,house_address,postal_code,payment_method,subtotal,discount_amount,delivery_fee,grand_total,payment_status,order_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,'PENDING','PENDING_CONFIRMATION') RETURNING id,order_number,grand_total,created_at`,
-      [orderNumber, idemKey, (req.user && req.user.id) || null, cst.fullName.trim(), cst.mobile.replace(/[\s-]/g, ''), cst.email || null, adr.province, adr.city, adr.area, adr.houseAddress, adr.postalCode || null, req.body.paymentMethod, subtotal, discount, deliveryFee, grandTotal]);
+    const txnId = (req.body.transactionId && String(req.body.transactionId).trim()) || null;
+    const ord = await client.query(`INSERT INTO orders(order_number,idempotency_key,user_id,customer_name,customer_phone,customer_email,province,city,area,house_address,postal_code,payment_method,transaction_id,subtotal,discount_amount,delivery_fee,grand_total,payment_status,order_status) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,'PENDING','PENDING_CONFIRMATION') RETURNING id,order_number,grand_total,created_at`,
+      [orderNumber, idemKey, (req.user && req.user.id) || null, cst.fullName.trim(), cst.mobile.replace(/[\s-]/g, ''), cst.email || null, adr.province, adr.city, adr.area, adr.houseAddress, adr.postalCode || null, req.body.paymentMethod, txnId, subtotal, discount, deliveryFee, grandTotal]);
     const orderId = ord.rows[0].id;
 
     // 6) Items (price snapshot) + stock decrement
@@ -396,7 +404,7 @@ app.post('/api/orders', optionalAuth, asyncH(async (req, res) => {
       await client.query('INSERT INTO inventory_movements(product_id,variant_id,movement_type,quantity,reference) VALUES($1,$2,$3,$4,$5)', [li.productId, li.variantId, 'ORDER', -li.qty, orderNumber]);
     }
     await client.query('INSERT INTO order_status_history(order_id,status,note) VALUES($1,$2,$3)', [orderId, 'PENDING_CONFIRMATION', 'Order placed']);
-    await client.query('INSERT INTO payments(order_id,method,amount,status) VALUES($1,$2,$3,$4)', [orderId, req.body.paymentMethod, grandTotal, req.body.paymentMethod === 'COD' ? 'COD_PENDING' : 'PENDING']);
+    await client.query('INSERT INTO payments(order_id,method,amount,status,provider_txn_id) VALUES($1,$2,$3,$4,$5)', [orderId, req.body.paymentMethod, grandTotal, req.body.paymentMethod === 'COD' ? 'COD_PENDING' : 'PENDING', txnId]);
 
     // 7) AUTO-SAVE address book (sirf logged-in customer): checkout par likha gaya
     // address usi order ke saath khud-ba-khud addresses table mein bhi save ho
@@ -418,11 +426,11 @@ app.post('/api/orders', optionalAuth, asyncH(async (req, res) => {
     await client.query('COMMIT');
     // Owner ko WhatsApp par foran khabar (sirf tab jab .env mein WHATSAPP_*
     // settings hon) — response is ka wait nahi karta, fail bhi nahi hota.
-    notifyWhatsAppOrder({ orderNumber, customerName: cst.fullName.trim(), customerPhone: cst.mobile.replace(/[\s-]/g, ''), grandTotal, paymentMethod: req.body.paymentMethod });
+    notifyWhatsAppOrder({ orderNumber, customerName: cst.fullName.trim(), customerPhone: cst.mobile.replace(/[\s-]/g, ''), grandTotal, paymentMethod: req.body.paymentMethod, transactionId: txnId });
 
     // COD: paid ONLY after courier collection/reconciliation — never at placement (spec Part D-5).
     // Online: client must pay via gateway; order stays PENDING until signed callback verifies (see below).
-    res.status(201).json({ message: 'Order placed successfully', orderNumber, grandTotal, subtotal, discount, deliveryFee, paymentMethod: req.body.paymentMethod, paymentNumber: process.env.STORE_PAYMENT_NUMBER || '03147656328', nextStep: req.body.paymentMethod === 'COD' ? 'Pay cash when your parcel arrives.' : 'Complete payment in your JazzCash/Easypaisa/NayaPay app, then wait for confirmation.' });
+    res.status(201).json({ message: 'Order placed successfully', orderNumber, grandTotal, subtotal, discount, deliveryFee, paymentMethod: req.body.paymentMethod, paymentNumber: process.env.STORE_PAYMENT_NUMBER || '03147656328', nextStep: req.body.paymentMethod === 'COD' ? 'Pay cash when your parcel arrives.' : 'Complete payment in your JazzCash/Easypaisa app, then wait for confirmation.' });
   } catch (e) {
     await client.query('ROLLBACK');
     res.status(e.status || 500).json({ error: e.status ? e.message : 'Order failed. Please retry.', retry: true });
@@ -460,7 +468,7 @@ app.get('/api/auth/me/orders', requireAuth, asyncH(async (req, res) => {
   res.json({ orders: rows });
 }));
 
-// ---------- Payment callbacks (JazzCash / Easypaisa / NayaPay) ----------
+// ---------- Payment callbacks (JazzCash / Easypaisa) ----------
 // SECURITY (spec §14): NEVER mark paid from a browser redirect. Only a server-side
 // callback whose HMAC signature verifies AND whose amount + order ID match the DB
 // order may set payment_status = PAID. Secret keys live ONLY in .env, never frontend.
@@ -472,8 +480,8 @@ function verifyCallbackSignature(payload, secret) {
   try { return crypto.timingSafeEqual(Buffer.from(received.toLowerCase()), Buffer.from(expected.toLowerCase())); } catch { return false; }
 }
 app.post('/api/payments/callback/:provider', asyncH(async (req, res) => {
-  const provider = req.params.provider.toUpperCase(); // JAZZCASH | EASYPAISA | NAYAPAY
-  const secret = { JAZZCASH: process.env.JAZZCASH_SECRET, EASYPAISA: process.env.EASYPAISA_SECRET, NAYAPAY: process.env.NAYAPAY_SECRET }[provider];
+  const provider = req.params.provider.toUpperCase(); // JAZZCASH | EASYPAISA
+  const secret = { JAZZCASH: process.env.JAZZCASH_SECRET, EASYPAISA: process.env.EASYPAISA_SECRET }[provider];
   const payload = { ...req.query, ...req.body };
   if (!verifyCallbackSignature(payload, secret)) { console.warn(`[PAY] bad signature provider=${provider}`); return res.status(400).send('Invalid signature'); }
   const orderNumber = payload.pp_BillReference || payload.orderId || payload.order_id;
@@ -572,7 +580,7 @@ app.get('/api/admin/orders', requireAuth, requireAdmin, asyncH(async (req, res) 
   const { status, page = 1 } = req.query; const args = []; let where = 'WHERE 1=1';
   if (status) { args.push(status); where += ` AND order_status=$${args.length}`; }
   args.push(30, (Math.max(1, +page) - 1) * 30);
-  const { rows } = await pool.query(`SELECT order_number,customer_name,customer_phone,grand_total,payment_method,payment_status,order_status,created_at FROM orders ${where} ORDER BY created_at DESC LIMIT $${args.length - 1} OFFSET $${args.length}`, args);
+  const { rows } = await pool.query(`SELECT order_number,customer_name,customer_phone,grand_total,payment_method,transaction_id,payment_status,order_status,created_at FROM orders ${where} ORDER BY created_at DESC LIMIT $${args.length - 1} OFFSET $${args.length}`, args);
   res.json({ orders: rows });
 }));
 app.get('/api/admin/orders/:orderNumber', requireAuth, requireAdmin, asyncH(async (req, res) => {
