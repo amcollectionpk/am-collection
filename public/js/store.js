@@ -348,6 +348,73 @@
     paint(); restart();
   }
 
+  function loadReviews(all) {
+    var track = document.getElementById('reviewsTrack');
+    if (!track || !all || !all.length) return;
+    var jobs = all.map(function (p) {
+      return api.get('/api/products/' + encodeURIComponent(p.slug) + '/reviews')
+        .then(function (d) {
+          var list = (d && d.reviews) || [];
+          return list.map(function (r) {
+            return { name: r.customer_name || 'Customer', rating: Number(r.rating) || 5, body: r.body || '', product: p.name };
+          });
+        })
+        .catch(function () { return []; });
+    });
+    Promise.all(jobs).then(function (groups) {
+      var reviews = [];
+      groups.forEach(function (g) { reviews = reviews.concat(g); });
+      if (!reviews.length) {
+        track.innerHTML = '<div class="tst-card tst-empty"><div class="tst-stars">★★★★★</div><p>No reviews yet — be the first to share your experience!</p><a class="btn btn-primary" href="#/shop">Shop Now</a></div>';
+        return;
+      }
+      var set = reviews.slice();
+      while (set.length < 4) set = set.concat(reviews);
+      var cards = set.map(function (r) {
+        var filled = Math.max(1, Math.min(5, r.rating));
+        var stars = '★★★★★'.slice(0, filled) + '☆☆☆☆☆'.slice(0, 5 - filled);
+        var initial = (r.name || 'C').trim().charAt(0).toUpperCase();
+        return '<article class="tst-card"><div class="tst-stars">' + stars + '</div><p>' + esc(r.body) + '</p>' +
+          '<div class="tst-who"><span class="tst-avatar">' + esc(initial) + '</span><span><b>' + esc(r.name) + '</b><span class="muted small"> bought ' + esc(r.product) + '</span></span></div></article>';
+      }).join('');
+      track.innerHTML = cards + cards;
+    });
+  }
+  function initWhyCarousel() {
+    var box = document.getElementById('whyCarousel');
+    if (!box) return;
+    var track = document.getElementById('whyTrack');
+    var dots = box.querySelectorAll('#whyDots button');
+    if (!track || !dots.length) return;
+    var n = dots.length, cur = 0, timer = null;
+    function paint() {
+      track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+      for (var i = 0; i < n; i++) dots[i].classList.toggle('active', i === cur);
+    }
+    function go(k) { cur = (k + n) % n; paint(); }
+    function restart() {
+      if (timer) clearInterval(timer);
+      timer = setInterval(function () {
+        if (!document.getElementById('whyCarousel')) { clearInterval(timer); timer = null; return; }
+        go(cur + 1);
+      }, 3000);
+    }
+    for (var i = 0; i < n; i++) {
+      (function (idx) {
+        dots[idx].addEventListener('click', function () { go(idx); restart(); });
+      })(i);
+    }
+    box.addEventListener('mouseenter', function () { if (timer) { clearInterval(timer); timer = null; } });
+    box.addEventListener('mouseleave', function () { restart(); });
+    var sx = null;
+    box.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    box.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx; sx = null;
+      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); restart(); }
+    }, { passive: true });
+    paint(); restart();
+  }
   function viewHome() {
     app.innerHTML = '<p class="muted">Loading\u2026</p>';
     Promise.all([loadCategories(), loadProducts({ sort: 'popular' })]).then(function (r) {
@@ -423,14 +490,28 @@
         '<div class="outlet-inner">\uD83D\uDECD\uFE0F GRAND OPENING \u2014 Flat 35% OFF on All Watches &amp; Hoodies \u2728</div>' +
         '<svg class="outlet-wave flip" viewBox="0 0 1440 36" preserveAspectRatio="none" aria-hidden="true"><path d="M0,18 C180,2 360,34 540,18 C720,2 900,34 1080,18 C1260,2 1380,34 1440,18 L1440,36 L0,36 Z" fill="#000"/></svg>' +
         '</div>' +
+        '<section class="reviews-section" id="reviewsSection">' +
+        '<div style="text-align:center;margin:26px 0 14px"><div style="letter-spacing:.28em;font-weight:800;font-size:.78rem;color:#e30613">TESTIMONIALS</div>' +
+        '<h2 style="margin:6px 0 4px;font-size:1.5rem">Hear From Our Happy Customers</h2>' +
+        '<p class="muted" style="margin:0">Real customers share their experience shopping with AM Collection.</p></div>' +
+        '<div class="reviews-strip"><div class="reviews-track" id="reviewsTrack"></div></div>' +
+        '</section>' +
         '<div class="offer-banner"><div><b>Free Delivery</b><br><span class="muted">On all orders of Rs. 5,000 or more — anywhere in Pakistan.</span></div><a class="btn btn-primary" href="#/offers">See Offers</a></div>' +
         '<h2 class="section-title">Why Choose Us</h2>' +
-        '<div class="why-row">' +
-          '<div class="why-item"><span class="why-ico">\uD83D\uDCB5</span><b>Cash on Delivery</b><span class="muted small">Pay at your doorstep</span></div>' +
-          '<div class="why-item"><span class="why-ico">\uD83D\uDE9A</span><b>Delivery Rs. 200</b><span class="muted small">FREE on orders Rs. 5,000+</span></div>' +
-          '<div class="why-item"><span class="why-ico">\uD83D\uDCB3</span><b>Easy Payments</b><span class="muted small">JazzCash \u00b7 Easypaisa \u00b7 NayaPay</span></div>' +
-          '<div class="why-item"><span class="why-ico">\u21A9\uFE0F</span><b>7-Day Easy Return</b><span class="muted small">Damaged or wrong item</span></div>' +
-        '</div>' +
+        '<section class="why-carousel" id="whyCarousel" aria-label="Why choose AM Collection">' +
+          '<div class="why-track" id="whyTrack">' +
+            '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3.2"/><path d="M5.5 9.8h.01M18.5 14.2h.01"/></svg></span><b>Cash on Delivery</b><span class="muted small">Pay at your doorstep</span></div>' +
+            '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12v9H2z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg></span><b>Delivery Rs. 200</b><span class="muted small">FREE on orders Rs. 5,000+</span></div>' +
+            '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span><b>Easy Payments</b><span class="muted small">JazzCash \u00b7 Easypaisa \u00b7 NayaPay</span></div>' +
+            '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg></span><b>7-Day Easy Return</b><span class="muted small">Damaged or wrong item</span></div>' +
+          '</div>' +
+          '<div class="why-dots" id="whyDots">' +
+            '<button type="button" data-dot="0" class="active" aria-label="Cash on Delivery"></button>' +
+            '<button type="button" data-dot="1" aria-label="Delivery Rs. 200"></button>' +
+            '<button type="button" data-dot="2" aria-label="Easy Payments"></button>' +
+            '<button type="button" data-dot="3" aria-label="7-Day Easy Return"></button>' +
+          '</div>' +
+        '</section>' +
         '<section class="faq-dark"><h2>FAQ\'s</h2>' +
           '<details class="faq-dark-card"><summary>Are your watches premium quality?</summary><p>Yes, every product at AM Collection is carefully selected for premium quality, durability, and a stylish look.</p></details>' +
           '<details class="faq-dark-card"><summary>How is my order packed?</summary><p>All orders are shipped in secure, premium packaging so your product reaches you safe and in perfect condition.</p></details>' +
@@ -441,6 +522,8 @@
       initHeroSlider();
       initHoodieRail();
       initFeatured();
+      initWhyCarousel();
+      loadReviews(all);
       window.scrollTo(0, 0);
     });
   }
