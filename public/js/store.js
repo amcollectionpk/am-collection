@@ -23,22 +23,21 @@
   };
   var PAYMENTS = [
     { id: 'COD', name: 'Cash on Delivery', desc: 'Pay when your parcel arrives.' },
-    { id: 'JAZZCASH', name: 'JazzCash', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — marked paid after verified confirmation.' },
-    { id: 'EASYPAISA', name: 'Easypaisa', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — marked paid after verified confirmation.' },
-    { id: 'NAYAPAY', name: 'NayaPay', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — marked paid after verified confirmation.' }
+    { id: 'JAZZCASH', name: 'JazzCash', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — Transaction ID required.' },
+    { id: 'EASYPAISA', name: 'Easypaisa', desc: 'Pay on ' + AMC.PAYMENT_NUMBER + ' — Transaction ID required.' }
   ];
   var DELIVERY_FLAT = 200, FREE_ABOVE = 5000;
   var POLICIES = {
     shipping: 'Orders are dispatched after confirmation and delivered through courier services across Pakistan. The delivery charge is shown clearly at checkout before you place your order — the standard charge is Rs. 200, and orders of Rs. 5,000 or more get FREE delivery. Some remote areas may have a different rate, always shown in the Order Summary. Delivery usually takes 2–5 working days depending on your city. You will receive your order number at confirmation and can track your parcel any time from the Track Order page.',
     returns: 'If you receive a damaged, defective or wrong item, contact us within 7 days of delivery with your order number. Items must be unused and in the packaging they arrived in for exchange or refund. Refunds for prepaid orders are sent back through the same payment method; COD refunds are arranged after the returned parcel is received and checked.',
-    privacy: 'We collect only the information needed to process and deliver your order: your name, mobile number, email (optional) and delivery address. We never ask for your CNIC or date of birth at checkout. Your information is used for order processing, delivery and order updates, and is not sold to third parties. Payment confirmations for JazzCash, Easypaisa and NayaPay are accepted only after verified confirmation from the payment provider.',
+    privacy: 'We collect only the information needed to process and deliver your order: your name, mobile number, email (optional) and delivery address. We never ask for your CNIC or date of birth at checkout. Your information is used for order processing, delivery and order updates, and is not sold to third parties. Payment confirmations for JazzCash and Easypaisa are accepted only after verified confirmation from the payment provider.',
     terms: 'By placing an order on AM Collection you agree that the prices, product details and stock shown at the time of ordering apply to your order; your order stores a snapshot of the product name and price so later changes never alter a placed order. Cash on Delivery orders are payable to the courier at delivery. We may call or message you to confirm a COD order before dispatch. Orders can be cancelled by the store if an item goes out of stock, with a full refund of any prepaid amount.'
   };
   var POLICY_TITLES = { shipping: 'Shipping Policy', returns: 'Return & Refund Policy', privacy: 'Privacy Policy', terms: 'Terms & Conditions' };
   var FAQS = [
-    { q: 'How do I place an order?', a: 'Add a watch to your cart, open the cart and tap Checkout. Enter your name, mobile number and delivery address, choose a payment method (Cash on Delivery, JazzCash, Easypaisa or NayaPay) and tap Place Order. You will get an order number like ORD-20261107-001 on the Order Placed page.' },
+    { q: 'How do I place an order?', a: 'Add a watch to your cart, open the cart and tap Checkout. Enter your name, mobile number and delivery address, choose a payment method (Cash on Delivery, JazzCash or Easypaisa) and tap Place Order. You will get an order number like ORD-20261107-001 on the Order Placed page.' },
     { q: 'What are the delivery charges?', a: 'The standard delivery charge is Rs. 200. Orders of Rs. 5,000 or more get FREE delivery. The exact charge is always shown in the Order Summary before you place the order — no hidden charges.' },
-    { q: 'How can I pay?', a: 'You can pay Cash on Delivery when your parcel arrives, or pay through JazzCash, Easypaisa or NayaPay on the number 03147656328. Prepaid payments are marked paid only after verified confirmation from the payment provider.' },
+    { q: 'How can I pay?', a: 'You can pay Cash on Delivery when your parcel arrives, or pay through JazzCash or Easypaisa on the number 03147656328 (Account Title: Muqaddas Bibi). After paying, enter your Transaction ID at checkout — your order is completed only after the Transaction ID is entered. Prepaid payments are marked paid only after verified confirmation from the payment provider.' },
     { q: 'How do I track my order?', a: 'Open the Track Order page and enter your order number and the mobile number used at checkout. You will see the current status — Pending Confirmation, Confirmed, Processing, Shipped or Delivered.' },
     { q: 'Can I return or exchange an item?', a: 'Yes — damaged, defective or wrong items can be returned or exchanged within 7 days of delivery. See the Return & Refund Policy page for full details and contact us on WhatsApp for help.' },
     { q: 'Do I need an account to order?', a: 'No. You can order as a guest with just your name, mobile number and address, and track your order any time from the Track Order page with your order number and mobile number.' }
@@ -507,7 +506,7 @@
           '<div class="why-track" id="whyTrack">' +
             '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3.2"/><path d="M5.5 9.8h.01M18.5 14.2h.01"/></svg></span><b>Cash on Delivery</b><span class="muted small">Pay at your doorstep</span></div>' +
             '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12v9H2z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="6.5" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg></span><b>Delivery Rs. 200</b><span class="muted small">FREE on orders Rs. 5,000+</span></div>' +
-            '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span><b>Easy Payments</b><span class="muted small">JazzCash \u00b7 Easypaisa \u00b7 NayaPay</span></div>' +
+            '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></span><b>Easy Payments</b><span class="muted small">JazzCash \u00b7 Easypaisa</span></div>' +
             '<div class="why-slide"><span class="why-ico"><svg viewBox="0 0 24 24" width="58" height="58" fill="none" stroke="#111" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 2.6-6.4"/><path d="M3 4v5h5"/></svg></span><b>7-Day Easy Return</b><span class="muted small">Damaged or wrong item</span></div>' +
           '</div>' +
           '<div class="why-dots" id="whyDots">' +
@@ -637,7 +636,7 @@
           '<a class="btn btn-wa" href="' + waHref + '" target="_blank" rel="noopener">Order on WhatsApp</a>' +
           '<button class="btn" id="pdWish" style="justify-self:center">' + (wishlist.indexOf(p.slug) >= 0 ? '♥ Wishlisted' : '♡ Wishlist') + '</button></div>' +
         '<ol class="delivery-timeline"><li><b>Order placed</b>We confirm your order</li><li><b>Dispatched</b>Packed &amp; shipped</li><li><b>Delivered</b>2–5 working days</li></ol>' +
-        '<div class="trust-box" style="text-align:left;margin-top:16px"><b>Payment options</b><br><span class="muted small">Cash on Delivery, JazzCash, Easypaisa, NayaPay — ' + AMC.PAYMENT_NUMBER + '</span></div>' +
+        '<div class="trust-box" style="text-align:left;margin-top:16px"><b>Payment options</b><br><span class="muted small">Cash on Delivery, JazzCash, Easypaisa — ' + AMC.PAYMENT_NUMBER + '</span></div>' +
         '</div></div>' +
         '<h2 class="section-title">Customer Reviews</h2><div id="revBox">' +
         (d.reviews.length ? d.reviews.map(function (r) { return '<div class="review-card"><b>' + esc(r.customer_name) + '</b> <span class="stars">' + '★★★★★'.slice(0, Number(r.rating) || 0) + '</span><p>' + esc(r.body) + '</p></div>'; }).join('') : '<p class="muted">No reviews yet.</p>') +
@@ -743,6 +742,12 @@
       '<label>Postal Code (optional)<input id="coPostal"></label></div>' +
       '<div class="card" style="margin-top:14px"><h3 style="margin-top:0">Payment Method</h3><div class="pay-grid">' +
       PAYMENTS.map(function (p, i) { return '<label class="pay-card' + (i === 0 ? ' sel' : '') + '"><input type="radio" name="pay" value="' + p.id + '"' + (i === 0 ? ' checked' : '') + '><span><b>' + esc(p.name) + '</b><br><span class="muted small">' + esc(p.desc) + '</span></span></label>'; }).join('') +
+      '</div>' +
+      '<div id="payOnlineBox" hidden style="margin-top:12px;padding:12px;border:1px solid var(--border);border-radius:10px;background:#fff8e6">' +
+      '<b id="payOnlineTitle">JazzCash Payment</b>' +
+      '<p class="muted small" style="margin:6px 0">Is number par payment karein:<br>Account Number: <strong>' + AMC.PAYMENT_NUMBER + '</strong><br>Account Title: <strong>' + esc(AMC.PAYMENT_TITLE) + '</strong></p>' +
+      '<label>Transaction ID *<input id="coTxnId" placeholder="Payment ke baad milne wali Transaction ID yahan likhein" autocomplete="off"></label>' +
+      '<p class="muted small" style="margin:6px 0 0">Transaction ID ke baghair order complete nahi hoga.</p>' +
       '</div></div>' +
       '<div class="card" style="margin-top:14px"><h3 style="margin-top:0">Order Summary</h3><div id="coSummary"></div>' +
       '<p class="form-error" id="coErr"></p>' +
@@ -764,23 +769,40 @@
     }
     provEl.addEventListener('change', fillCities);
     cityEl.addEventListener('change', quote);
-    app.querySelectorAll('.pay-card').forEach(function (card) { card.addEventListener('click', function () { app.querySelectorAll('.pay-card').forEach(function (x) { x.classList.remove('sel'); }); card.classList.add('sel'); }); });
+    function updatePayBox() {
+      var sel = (app.querySelector('input[name="pay"]:checked') || {}).value || 'COD';
+      var box = document.getElementById('payOnlineBox');
+      if (!box) return;
+      if (sel === 'JAZZCASH' || sel === 'EASYPAISA') {
+        box.hidden = false;
+        document.getElementById('payOnlineTitle').textContent = (sel === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa') + ' Payment';
+      } else { box.hidden = true; }
+    }
+    app.querySelectorAll('.pay-card').forEach(function (card) { card.addEventListener('click', function () { app.querySelectorAll('.pay-card').forEach(function (x) { x.classList.remove('sel'); }); card.classList.add('sel'); updatePayBox(); }); });
+    updatePayBox();
     quote();
     document.getElementById('coForm').addEventListener('submit', function (e) {
       e.preventDefault();
       var missingSize = cart.some(function (c) { return /hoodie/i.test(c.slug) && !c.size; });
       if (missingSize) { AMC.toast('Please select a size for the hoodie in your cart first'); location.hash = '#/cart'; return; }
       var pay = (app.querySelector('input[name="pay"]:checked') || {}).value || 'COD';
+      var txnId = ((document.getElementById('coTxnId') || {}).value || '').trim();
+      if ((pay === 'JAZZCASH' || pay === 'EASYPAISA') && !txnId) {
+        document.getElementById('coErr').textContent = 'Transaction ID zaroori hai — pehle ' + (pay === 'JAZZCASH' ? 'JazzCash' : 'Easypaisa') + ' par payment karein, phir us ki Transaction ID yahan likhein.';
+        var pb = document.getElementById('payOnlineBox'); if (pb) window.scrollTo(0, pb.offsetTop - 20);
+        return;
+      }
       var body = {
         customer: { fullName: document.getElementById('coName').value.trim(), mobile: document.getElementById('coMobile').value.trim(), email: document.getElementById('coEmail').value.trim() || undefined },
         address: { province: provEl.value, city: cityEl.value, area: document.getElementById('coArea').value.trim(), houseAddress: document.getElementById('coHouse').value.trim(), postalCode: document.getElementById('coPostal').value.trim() || undefined },
         paymentMethod: pay,
+        transactionId: txnId || undefined,
         items: cart.map(function (c) { return { productId: c.productId, quantity: c.qty, size: c.size || undefined }; })
       };
       var btn = document.getElementById('coPlace'); btn.disabled = true; btn.textContent = 'Placing order…';
       api.post('/api/orders', body, { 'Idempotency-Key': idemKey }).then(function (res) {
         var o = res.order || res;
-        var placed = { orderNumber: o.orderNumber || res.orderNumber, grandTotal: o.grandTotal || res.grandTotal, paymentMethod: o.paymentMethod || res.paymentMethod || pay, paymentNumber: res.paymentNumber || AMC.PAYMENT_NUMBER, nextStep: res.nextStep || '' };
+        var placed = { orderNumber: o.orderNumber || res.orderNumber, grandTotal: o.grandTotal || res.grandTotal, paymentMethod: o.paymentMethod || res.paymentMethod || pay, paymentNumber: res.paymentNumber || AMC.PAYMENT_NUMBER, transactionId: txnId || '', nextStep: res.nextStep || '' };
         writeJson('amc-last-order', placed);
         cart = []; idemKey = null; saveCart();
         location.hash = '#/order-placed';
@@ -800,7 +822,7 @@
       '<p>Thank you for shopping with AM Collection.</p>' +
       '<p>Your order number is <b style="color:var(--gold-soft)">' + esc(o.orderNumber || '') + '</b></p>' +
       '<p><strong>Grand Total: ' + rs(o.grandTotal) + '</strong> · Payment: ' + esc(o.paymentMethod || '') + '</p>' +
-      '<p class="muted">' + esc(o.nextStep || 'We will call or message you to confirm your order before dispatch.') + (o.paymentMethod && o.paymentMethod !== 'COD' ? '<br>Payment number: <strong>' + esc(o.paymentNumber || AMC.PAYMENT_NUMBER) + '</strong> — your payment is marked paid after verified confirmation.' : '') + '</p>' +
+      '<p class="muted">' + esc(o.nextStep || 'We will call or message you to confirm your order before dispatch.') + (o.paymentMethod && o.paymentMethod !== 'COD' ? '<br>Payment number: <strong>' + esc(o.paymentNumber || AMC.PAYMENT_NUMBER) + '</strong> — your payment is marked paid after verified confirmation.' + (o.transactionId ? '<br>Transaction ID: <strong>' + esc(o.transactionId) + '</strong>' : '') : '') + '</p>' +
       '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><a class="btn btn-primary" href="#/track">Track Order</a><a class="btn" href="#/shop">Continue Shopping</a></div></div>';
     window.scrollTo(0, 0);
   }
@@ -812,7 +834,7 @@
       var premium = all.filter(function (p) { return p.price >= 3950; }).sort(function (a, b) { return b.price - a.price; });
       app.innerHTML = '<h1 class="section-title">Special Offers</h1>' +
         '<div class="offer-banner"><div><b>FREE Delivery</b><br><span class="muted">On every order of Rs. 5,000 or more — no code needed, applied automatically at checkout.</span></div><a class="btn btn-primary" href="#/shop">Shop Now</a></div>' +
-        '<div class="offer-banner"><div><b>Cash on Delivery</b><br><span class="muted">Order now and pay at your doorstep, anywhere in Pakistan. JazzCash, Easypaisa and NayaPay also accepted.</span></div><a class="btn" href="#/cart">My Cart</a></div>' +
+        '<div class="offer-banner"><div><b>Cash on Delivery</b><br><span class="muted">Order now and pay at your doorstep, anywhere in Pakistan. JazzCash and Easypaisa also accepted.</span></div><a class="btn" href="#/cart">My Cart</a></div>' +
         '<h2 class="section-title">Watches Under Rs. 3,000</h2>' + gridHtml(under3k) +
         '<h2 class="section-title">Premium Picks — Free Delivery</h2><p class="muted small" style="margin-top:-6px">Add any of these with another watch to cross Rs. 5,000 and your delivery is free.</p>' + gridHtml(premium);
       bindCardButtons(app); window.scrollTo(0, 0);
@@ -908,13 +930,14 @@
   function viewPayments() {
     app.innerHTML = '<h1 class="section-title">Payment Methods</h1><div class="card">' +
       PAYMENTS.map(function (p) { return '<div class="summary-line"><span><b>' + esc(p.name) + '</b><br><span class="muted small">' + esc(p.desc) + '</span></span></div>'; }).join('') +
-      '<p class="muted">Payment number for JazzCash, Easypaisa and NayaPay: <b style="color:var(--gold-soft)">' + AMC.PAYMENT_NUMBER + '</b>. Prepaid payments are marked paid only after verified confirmation from the payment provider.</p></div>';
+      '<p class="muted">JazzCash / Easypaisa account:<br>Account Number: <b style="color:var(--gold-soft)">' + AMC.PAYMENT_NUMBER + '</b><br>Account Title: <b style="color:var(--gold-soft)">' + esc(AMC.PAYMENT_TITLE) + '</b></p>' +
+      '<p class="muted">JazzCash ya Easypaisa se payment karne ke baad checkout par apni Transaction ID zaroor likhein — bina Transaction ID ke order complete nahi hoga. Prepaid payments are marked paid only after verified confirmation from the payment provider.</p></div>';
     window.scrollTo(0, 0);
   }
   function viewAbout() {
     app.innerHTML = '<h1 class="section-title">About AM Collection</h1><div id="aboutPic"></div><div class="card policy-body">' +
       '<p>AM Collection is an online watch store in Pakistan, bringing stylish men\'s, luxury and sports watches to your doorstep at honest prices.</p>' +
-      '<p>Premium Quality, Best Prices — Cash on Delivery across Pakistan. Pay cash at your doorstep, or through JazzCash, Easypaisa and NayaPay.</p>' +
+      '<p>Premium Quality, Best Prices — Cash on Delivery across Pakistan. Pay cash at your doorstep, or through JazzCash and Easypaisa.</p>' +
       '<p>Delivery is Rs. 200, and FREE on orders of Rs. 5,000 or more. Questions? Message us on WhatsApp any time.</p>' +
       '<p><a class="btn btn-primary" href="#/shop">Shop Watches</a> <a class="btn" href="' + AMC.WHATSAPP_LINK + '" target="_blank" rel="noopener">WhatsApp Us</a></p></div>';
     api.get('/api/pages/about').then(function (d) {
