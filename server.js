@@ -30,6 +30,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 
 const app = express();
+app.set('trust proxy', 1); // behind Cloady's ingress: rate limiting must key on the real client IP, not the proxy
 const PORT = process.env.PORT || 4000;
 const JWT_SECRET = process.env.JWT_SECRET;
 if (!JWT_SECRET) console.warn('[WARN] JWT_SECRET not set — set it in .env before production.');
@@ -67,7 +68,7 @@ app.use(helmet());
 app.use(cors({ origin: (process.env.CORS_ORIGINS || 'http://localhost:3000').split(','), credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true })); // payment callbacks post form data
-app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false }));
+app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 1000, standardHeaders: true, legacyHeaders: false }));
 app.use('/api/orders', rateLimit({ windowMs: 60 * 1000, max: 20 })); // tighter on checkout
 
 const asyncH = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
