@@ -428,8 +428,8 @@
       var cats = r[0], all = r[1];
       var slides = heroSlides(all);
       var hoodieCount = all.filter(function (p) { return /hoodie/i.test(p.slug); }).length;
-      var watchCount = all.filter(function (p) { return !/hoodie/i.test(p.slug); }).length;
-      var premiumStrip = all.filter(function (p) { return !/hoodie/i.test(p.slug); }).map(function (p) {
+      var watchCount = all.filter(function (p) { return p.category_id; }).length;
+      var premiumStrip = all.filter(function (p) { return p.category_id; }).map(function (p) {
         return '<a href="#/product/' + esc(p.slug) + '"><img src="' + esc(p.image_url || '') + '" alt="' + esc(p.name) + '" loading="lazy"></a>';
       }).join('');
       var catTiles = [
@@ -583,6 +583,7 @@
     'men-zip-hoodie-track-suit-black-red-white-autumn': ['/assets/hoodies/tracksuit-zip-2.jpg', '/assets/hoodies/tracksuit-zip-3.jpg', '/assets/hoodies/tracksuit-zip-4.jpg', '/assets/hoodies/tracksuit-zip-5.jpg'],
     'men-color-block-hoodie-joggers-set-autumn': ['/assets/hoodies/colorblock-set-2.jpg', '/assets/hoodies/colorblock-set-3.jpg', '/assets/hoodies/colorblock-set-4.jpg', '/assets/hoodies/colorblock-set-5.jpg'],
     'men-amiri-fleece-graphic-hoodie-track-suit-white': ['/assets/hoodies/amiri-2.jpg', '/assets/hoodies/hoodie-size-chart.jpg'],
+    'men-fleece-zip-track-suit-brown-winter-warm': ['/assets/hoodies/brown-track-2.jpg', '/assets/hoodies/brown-track-3.jpg', '/assets/hoodies/brown-track-4.jpg', '/assets/hoodies/brown-track-5.jpg', '/assets/hoodies/brown-track-6.jpg', '/assets/hoodies/brown-track-7.jpg', '/assets/hoodies/brown-track-trouser-chart.jpg', '/assets/hoodies/brown-track-shirt-chart.jpg'],
     'black-rubber-strap-watch-for-men': ['/assets/watches/black-rubber-strap-2.jpg', '/assets/watches/black-rubber-strap-3.jpg', '/assets/watches/black-rubber-strap-4.jpg', '/assets/watches/black-rubber-strap-5.jpg', '/assets/watches/black-rubber-strap-6.jpg', '/assets/watches/black-rubber-strap-7.jpg', '/assets/watches/black-rubber-strap-8.jpg', '/assets/watches/fitross-video.mp4'],
     'mens-comfort-fit-strap-watch': ['/assets/watches/comfort-fit-2.jpg', '/assets/watches/comfort-fit-3.jpg', '/assets/watches/comfort-fit-4.jpg', '/assets/watches/comfort-fit-5.jpg'],
     'mens-hoursly-luxury-skeleton-watch': ['/assets/watches/hoursly-skeleton-2.jpg', '/assets/watches/hoursly-skeleton-3.jpg', '/assets/watches/hoursly-skeleton-video.mp4'],
