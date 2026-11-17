@@ -93,6 +93,7 @@ label{display:grid;gap:6px;font-weight:600;font-size:.92rem;margin-bottom:12px}
 .hoodie-card img{display:block;width:100%;height:240px;object-fit:contain;border-radius:0}
 .hoodie-name{display:none;margin-top:6px;font-weight:600;font-size:.8rem;color:#555}
 .hoodie-card.active .hoodie-name,.hoodie-card:hover .hoodie-name{display:block}
+.hoodie-track:hover .hoodie-card.active:not(:hover) .hoodie-name{display:none}
 .hoodie-card.active{transform:scale(1.12);z-index:2}
 .hoodie-card:hover{transform:scale(1.18);z-index:3}
 .hoodie-hook{position:absolute;top:-24px;left:50%;width:2px;height:24px;background:#222;transform:translateX(-50%);z-index:1}
