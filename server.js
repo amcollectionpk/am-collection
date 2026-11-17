@@ -68,7 +68,9 @@ app.use(helmet());
 app.use(cors({ origin: (process.env.CORS_ORIGINS || 'http://localhost:3000').split(','), credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true })); // payment callbacks post form data
-app.use('/api/', rateLimit({ windowMs: 15 * 60 * 1000, max: 1000, standardHeaders: true, legacyHeaders: false }));
+// No rate limit on general /api/ browsing (products, categories, reviews):
+// the owner wants it unlimited so the shop never 429s again. Checkout and
+// admin login keep their own tight limiters below (order spam / brute-force).
 app.use('/api/orders', rateLimit({ windowMs: 60 * 1000, max: 20 })); // tighter on checkout
 
 const asyncH = (fn) => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
