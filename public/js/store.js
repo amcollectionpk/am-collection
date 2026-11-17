@@ -105,26 +105,22 @@
   function loadProducts(opts) {
     opts = opts || {};
     return detectMode().then(function (live) {
-      if (!live) return localFilter(opts).map(normProduct);
+      // No live API = no products. Never fall back to the built-in demo catalog:
+      // it holds the 79 old watches the owner removed, and showing them again
+      // (with broken images) is worse than an empty list.
+      if (!live) return [];
       var qs = '?limit=100' + (opts.category ? '&category=' + encodeURIComponent(opts.category) : '') +
         (opts.search ? '&search=' + encodeURIComponent(opts.search) : '') + (opts.sort ? '&sort=' + encodeURIComponent(opts.sort) : '');
       return api.get('/api/products' + qs).then(function (d) { return (d.products || []).map(normProduct); })
-        .catch(function () { return localFilter(opts).map(normProduct); });
+        .catch(function () { return []; });
     });
   }
   function loadProduct(slug) {
     return detectMode().then(function (live) {
-      if (!live) {
-        var p = null;
-        CATALOG.products.forEach(function (x) { if (x.slug === slug) p = x; });
-        return p ? { product: normProduct(p), variants: [], reviews: [], reviewSummary: { count: 0, averageRating: 0 } } : null;
-      }
+      if (!live) return null;
       return api.get('/api/products/' + encodeURIComponent(slug)).then(function (d) {
         return { product: normProduct(d.product), variants: d.variants || [], reviews: d.reviews || [], reviewSummary: d.reviewSummary || { count: 0, averageRating: 0 } };
-      }).catch(function () {
-        var p = null; CATALOG.products.forEach(function (x) { if (x.slug === slug) p = x; });
-        return p ? { product: normProduct(p), variants: [], reviews: [], reviewSummary: { count: 0, averageRating: 0 } } : null;
-      });
+      }).catch(function () { return null; });
     });
   }
   function loadCategories() {
