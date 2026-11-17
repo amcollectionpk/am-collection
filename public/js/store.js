@@ -277,7 +277,9 @@
     { slug: 'men-color-block-fleece-hoodie-navy', name: 'Men Color Block Fleece Hoodie \u2014 Navy', img: '/assets/hoodies/hoodie-1-navy.jpg' },
     { slug: 'men-color-block-fleece-hoodie-black', name: 'Men Color Block Fleece Hoodie \u2014 Black', img: '/assets/hoodies/hoodie-2-black.jpg' },
     { slug: 'men-color-block-fleece-hoodie-olive', name: 'Men Color Block Fleece Hoodie \u2014 Olive', img: '/assets/hoodies/hoodie-3-olive.jpg' },
-    { slug: 'jakuta-zipper-hoodie-sleeveless', name: 'JAKUTA Zipper Hoodie (Sleeveless Edition)', img: '/assets/hoodies/hoodie-4-sleeveless.jpg' }
+    { slug: 'jakuta-zipper-hoodie-sleeveless', name: 'JAKUTA Zipper Hoodie (Sleeveless Edition)', img: '/assets/hoodies/hoodie-4-sleeveless.jpg' },
+    { slug: 'men-zip-hoodie-track-suit-black-red-white-autumn', name: 'Men Zip Hoodie Track Suit', img: '/assets/hoodies/tracksuit-zip-1.jpg' },
+    { slug: 'men-color-block-hoodie-joggers-set-autumn', name: 'Men Color Block Hoodie & Joggers Set', img: '/assets/hoodies/colorblock-set-1.jpg' }
   ];
   function initHoodieRail() {
     var rail = document.getElementById('hoodieRail');
@@ -577,6 +579,8 @@
     'diamond-stone-mens-luxury-fashion-watch-black': ['/assets/watches/diamond-stone-black-2.jpg', '/assets/watches/diamond-stone-black-3.jpg', '/assets/watches/diamond-stone-black-4.jpg', '/assets/watches/diamond-stone-black-5.jpg', '/assets/watches/diamond-stone-black-6.jpg', '/assets/watches/diamond-stone-black-7.jpg', '/assets/watches/diamond-stone-black-8.jpg', '/assets/watches/diamond-stone-black-9.jpg'],
     'cartier-tank-watch': ['/assets/watches/cartier-tank-2.jpg', '/assets/watches/cartier-tank-3.jpg', '/assets/watches/cartier-tank-4.jpg'],
     'jakuta-zipper-hoodie-sleeveless': ['/assets/hoodies/jakuta-2.jpg', '/assets/hoodies/jakuta-3.jpg', '/assets/hoodies/jakuta-4.jpg', '/assets/hoodies/jakuta-5.jpg', '/assets/hoodies/jakuta-6.jpg'],
+    'men-zip-hoodie-track-suit-black-red-white-autumn': ['/assets/hoodies/tracksuit-zip-2.jpg', '/assets/hoodies/tracksuit-zip-3.jpg', '/assets/hoodies/tracksuit-zip-4.jpg', '/assets/hoodies/tracksuit-zip-5.jpg'],
+    'men-color-block-hoodie-joggers-set-autumn': ['/assets/hoodies/colorblock-set-2.jpg', '/assets/hoodies/colorblock-set-3.jpg', '/assets/hoodies/colorblock-set-4.jpg', '/assets/hoodies/colorblock-set-5.jpg'],
     'black-rubber-strap-watch-for-men': ['/assets/watches/black-rubber-strap-2.jpg', '/assets/watches/black-rubber-strap-3.jpg', '/assets/watches/black-rubber-strap-4.jpg', '/assets/watches/black-rubber-strap-5.jpg', '/assets/watches/black-rubber-strap-6.jpg', '/assets/watches/black-rubber-strap-7.jpg', '/assets/watches/black-rubber-strap-8.jpg', '/assets/watches/fitross-video.mp4'],
     'mens-comfort-fit-strap-watch': ['/assets/watches/comfort-fit-2.jpg', '/assets/watches/comfort-fit-3.jpg', '/assets/watches/comfort-fit-4.jpg', '/assets/watches/comfort-fit-5.jpg'],
     'mens-hoursly-luxury-skeleton-watch': ['/assets/watches/hoursly-skeleton-2.jpg', '/assets/watches/hoursly-skeleton-3.jpg', '/assets/watches/hoursly-skeleton-video.mp4'],
