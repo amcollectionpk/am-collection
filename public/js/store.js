@@ -279,7 +279,10 @@
     { slug: 'jakuta-zipper-hoodie-sleeveless', name: 'JAKUTA Zipper Hoodie (Sleeveless Edition)', img: '/assets/hoodies/hoodie-4-sleeveless.jpg' },
     { slug: 'men-zip-hoodie-track-suit-black-red-white-autumn', name: 'Men Zip Hoodie Track Suit', img: '/assets/hoodies/tracksuit-zip-1.jpg' },
     { slug: 'men-color-block-hoodie-joggers-set-autumn', name: 'Men Color Block Hoodie & Joggers Set', img: '/assets/hoodies/colorblock-set-1.jpg' },
-    { slug: 'men-amiri-fleece-graphic-hoodie-track-suit-white', name: 'Men Amiri Fleece Graphic Track Suit', img: '/assets/hoodies/amiri-1.jpg' }
+    { slug: 'men-amiri-fleece-graphic-hoodie-track-suit-white', name: 'Men Amiri Fleece Graphic Track Suit', img: '/assets/hoodies/amiri-1.jpg' },
+    { slug: 'men-fleece-zip-track-suit-brown-winter-warm', name: 'Men Fleece Zip Track Suit — Brown', img: '/assets/hoodies/brown-track-1.jpg' },
+    { slug: 'mens-fleece-zipper-track-suit-plain-grey-slim-fit', name: 'Men Fleece Zipper Track Suit — Grey', img: '/assets/hoodies/grey-track-1.jpg' },
+    { slug: 'men-fleece-zipper-track-suit-black-xl-to-xxl-winter-warm', name: 'Men Fleece Zipper Track Suit — Black', img: '/assets/hoodies/black-track-1.jpg' }
   ];
   function initHoodieRail() {
     var rail = document.getElementById('hoodieRail');
