@@ -1,3 +1,4 @@
+// DEPLOY-TRIGGER-20261117-1535 auto-deploy test, no behavior change
 /* AM Collection — Luxury Watches storefront.
    Screens (mobile-app style): Home / Categories / Product Details / My Cart /
    Checkout / Order Placed / Account / Special Offers (+ Shop, Wishlist, Track,
