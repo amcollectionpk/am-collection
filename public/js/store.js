@@ -81,6 +81,7 @@
       wasPrice: was,
       image_url: img, category_slug: p.category_slug || p.categorySlug || '',
       category_name: p.category_name || p.categoryName || '',
+      category_id: p.category_id != null ? Number(p.category_id) : null,
       stock_qty: p.stock_qty != null ? Number(p.stock_qty) : 20,
       is_featured: !!p.is_featured, description: p.description || ''
     };
